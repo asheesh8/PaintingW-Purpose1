@@ -133,8 +133,8 @@ body.menu-open { overflow: hidden; }
 /* ---------- inner pages ---------- */
 .phead { padding: clamp(80px, 12vw, 180px) var(--g) clamp(48px, 7vw, 96px); display: grid; gap: 26px; justify-items: start; }
 .phead h1 { max-width: 14ch; }
-.ending { padding: var(--sec) var(--g); display: grid; gap: 20px; justify-items: center; text-align: center; }
-.ending p { font-size: 17px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px 12px; }
+.nf { min-height: calc(100svh - var(--hdr) - 120px); align-content: center; }
+.nf-links { display: flex; gap: 26px; font-size: 17px; }
 
 /* work index: names only; the photograph follows the cursor */
 .pindex { padding: 0 var(--g); }

@@ -333,4 +333,19 @@ page('transformations.html', 'Before & after · Painting With Purpose', 'The fir
 </section>
 <section class="ba-grid">{tiles}</section>
 <p class="ba-all"><button class="tlink" type="button" data-show-more>Show all {len(TF)}</button></p>''', 'transformations.html')
+# ---------------------------------------------------------------- 404 (Vercel serves 404.html for missing paths)
+page('404.html', 'Page not found · Painting With Purpose', 'This page could not be found.',
+     '''<section class="phead nf">
+  <p class="eyebrow">404</p>
+  <h1>This page isn’t here.</h1>
+  <p class="lede">The link may be old, or the page may have moved.</p>
+  <p class="nf-links"><a class="tlink" href="index.html">Home</a><a class="tlink" href="work.html">Work</a><a class="tlink" href="contact.html">Contact</a></p>
+</section>''')
+# the 404 can be served at any depth, so its links start from the site root
+nf = open('404.html').read()
+for attr in ('href="', 'src="', 'srcset="'):
+    nf = nf.replace(attr + 'assets/', attr + '/assets/')
+import re
+nf = re.sub(r'href="([a-z0-9-]+\.html)', r'href="/\1', nf)
+open('404.html', 'w').write(nf)
 print('built')
