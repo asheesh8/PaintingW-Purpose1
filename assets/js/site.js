@@ -73,20 +73,19 @@
     var tall = window.matchMedia('(max-aspect-ratio: 4/5)').matches;
     var start = function (v) {
       var src = (tall && v.dataset.srcTall) || v.dataset.src || v.dataset.srcTall;
-      if (!src || v.src) return;
-      v.src = src;
-      v.addEventListener('canplay', function () {
-        var p = v.play();
-        if (p && p.then) p.then(function () { v.classList.add('ready'); }, function () {});
-        else v.classList.add('ready');
-      }, { once: true });
+      if (!src) return;
+      if (!v.src) {
+        v.src = src;
+        v.addEventListener('playing', function () { v.classList.add('ready'); }, { once: true });
+      }
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
     };
     if ('IntersectionObserver' in window) {
       var vo = new IntersectionObserver(function (es) {
         es.forEach(function (e) {
-          var v = e.target;
-          if (e.isIntersecting) { start(v); if (v.classList.contains('ready')) v.play().catch(function () {}); }
-          else if (v.src) v.pause();
+          if (e.isIntersecting) start(e.target);
+          else if (e.target.src) e.target.pause();
         });
       }, { rootMargin: '200px 0px' });
       clips.forEach(function (v) { vo.observe(v); });

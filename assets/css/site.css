@@ -77,6 +77,11 @@ body.menu-open { overflow: hidden; }
 .h1-in h1 { font-size: clamp(34px, 4.2vw, 64px); max-width: 15ch; animation: rise 1.4s .5s var(--ease) both; }
 .h1-cap { position: absolute; right: var(--g); bottom: clamp(32px, 6vw, 72px); z-index: 2; font-size: 13px; letter-spacing: .04em; opacity: .85; }
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
+/* a thin line at the foot of the hero, a quiet cue to keep moving */
+.h1-cue { position: absolute; left: 50%; bottom: 0; z-index: 2; width: 1px; height: clamp(48px, 8vh, 88px); background: rgba(255, 255, 255, .28); overflow: hidden; }
+.h1-cue::after { content: ""; position: absolute; left: 0; top: 0; width: 1px; height: 40%; background: #fff; animation: cue 2.6s var(--ease) infinite; }
+@keyframes cue { from { transform: translateY(-100%); } to { transform: translateY(250%); } }
+.h1-media .clip.ready ~ img, .h1-media:has(.clip.ready) img { animation: none; }
 
 /* ---------- home 2: a statement and air ---------- */
 .statement { padding: var(--sec) var(--g); display: grid; gap: 28px; max-width: 1180px; }
@@ -277,6 +282,7 @@ body.menu-open { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .h1-cue::after { animation: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .rv { opacity: 1; transform: none; }
   .reveal { height: auto; }

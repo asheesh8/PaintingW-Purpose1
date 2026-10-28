@@ -63,7 +63,7 @@ def hero_media(name, alt, eager=False, tall_only=False):
     vids = [v for v in (f'assets/hero/{name}.mp4', f'assets/hero/{name}-tall.mp4') if os.path.exists(v)]
     if vids:
         attrs = ' '.join(f'data-src{"-tall" if v.endswith("-tall.mp4") else ""}="{v}"' for v in vids)
-        pic += f'<video class="clip" muted playsinline loop preload="none" aria-hidden="true" {attrs}></video>'
+        pic += f'<video class="clip" muted playsinline loop preload="{"auto" if eager else "none"}" aria-hidden="true" {attrs}></video>'
     return pic
 
 
@@ -127,6 +127,7 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
   <div class="h1-media">{hero_media('sigma', 'Sigma Phi House in Burlington: white Corinthian columns on a brick facade', eager=True)}</div>
   <div class="h1-in"><h1>Careful painting for Vermont homes and buildings.</h1></div>
   <span class="h1-cap">Sigma Phi House, Burlington</span>
+  <span class="h1-cue" aria-hidden="true"></span>
 </section>
 
 <section class="statement">
