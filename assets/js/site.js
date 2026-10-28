@@ -121,7 +121,21 @@
       var bad = $$('[required]', form).filter(function (i) {
         var ok = i.value.trim() !== '' && i.checkValidity();
         var f = i.closest('.field');
-        if (f) f.classList.toggle('bad', !ok);
+        if (f) {
+          f.classList.toggle('bad', !ok);
+          var m = $('.err', f);
+          if (!m) {
+            m = document.createElement('small');
+            m.className = 'err';
+            m.id = 'err-' + (form.dataset.form || 'f') + '-' + i.name;
+            m.setAttribute('aria-live', 'polite');
+            f.appendChild(m);
+            i.setAttribute('aria-describedby', m.id);
+          }
+          m.textContent = i.value.trim() === '' ? 'Required' : (i.type === 'email' ? 'Check this email address' : 'Check this field');
+          m.hidden = ok;
+        }
+        i.setAttribute('aria-invalid', String(!ok));
         return !ok;
       });
       if (bad.length) { bad[0].focus(); return; }
