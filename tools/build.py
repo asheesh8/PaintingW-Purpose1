@@ -64,15 +64,6 @@ def wc(name):
     return f'<img class="wc wc-{name}" src="assets/wc/{name}.webp" alt="" aria-hidden="true" width="{w}" height="{h}" loading="lazy" decoding="async">'
 
 
-BANDS = {'valley': (1672, 451), 'houses': (1536, 294), 'tools': (1536, 222), 'village': (1536, 250), 'lake': (1536, 284)}
-
-
-def band(name):
-    """A full-width watercolour strip that separates two sections (paper knocked out, so it sits on the cream)."""
-    w, h = BANDS[name]
-    return f'<div class="wc-strip wc-strip-{name}" aria-hidden="true"><img src="assets/wc/band-{name}.webp" alt="" width="{w}" height="{h}" loading="lazy" decoding="async"></div>'
-
-
 def hero_media(name, alt, eager=False, tall_only=False, clip=True):
     """One of the four hero photographs: a wide still with a tall crop for phones, plus its silent clip when it exists
     (each clip is used once on the site: Sigma on home, Victorian and Library on their project pages, Porch on contact)."""
@@ -94,7 +85,7 @@ def hero_media(name, alt, eager=False, tall_only=False, clip=True):
 SITE = 'https://paintingwithpurpose01.vercel.app'
 
 
-def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False, foot='valley'):
+def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
     menu = ''.join(f'<li><a href="{h}"{cur(h, current)}>{html.escape(t)}</a></li>' for h, t in MENU)
     doc = f'''<!doctype html>
 <html lang="en">
@@ -132,9 +123,8 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False, fo
 <main id="main">
 {body}
 </main>
-{band(foot)}
 <footer class="ftr">
-  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p></div>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p>{wc("mountains")}</div>
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></li><li class="mute">{ADDRESS}</li></ul>
   <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
@@ -163,7 +153,7 @@ page('index.html', 'Painting With Purpose · House painters in Greater Burlingto
     <a class="cap" href="project-queen-anne-victorian.html">Queen Anne Victorian · Burlington →</a>
   </div>
 </section>
-{band('lake')}
+
 <section class="inside">
   <div class="inside-media" data-dark>{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<p class="beat inside-beat" aria-hidden="true">a library in the middle of town,</p></div>
   <div class="inside-items">
@@ -177,7 +167,7 @@ page('index.html', 'Painting With Purpose · House painters in Greater Burlingto
     {wc('leaves')}
   </div>
 </section>
-{band('houses')}
+
 <section class="invite">
   <figure class="invite-media" data-dark>{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
   <div class="invite-txt">
@@ -211,9 +201,8 @@ page('work.html', 'Work · Painting With Purpose', 'Homes, halls and storefronts
   <h1>Homes, halls and storefronts.</h1>
   {wc('brush')}
 </section>
-{band('houses')}
 <section class="pindex"><ul>{rows}</ul></section>
-<div class="peek" aria-hidden="true"><img alt=""></div>''', 'work.html', foot='lake')
+<div class="peek" aria-hidden="true"><img alt=""></div>''', 'work.html')
 
 # ---------------------------------------------------------------- project pages: one photograph, then words
 for i, fn in enumerate(ORDER):
@@ -233,7 +222,7 @@ for i, fn in enumerate(ORDER):
   <div class="pj-text">{''.join(f'<p>{t}</p>' for t in d['text'])}</div>
   <div class="pj-side"><dl class="credits">{facts}</dl><p class="eyebrow">Palette</p><div class="palette">{d['palette']}</div></div>
 </section>
-{more}{band('village')}<section class="pj-next"><p class="eyebrow">Next project</p><a href="{nxt}">{P[nxt]['title']} <span>→</span></a></section>'''
+{more}<section class="pj-next"><p class="eyebrow">Next project</p><a href="{nxt}">{P[nxt]['title']} <span>→</span></a></section>'''
     page(fn, f'{plain(d["title"])} · Painting With Purpose', plain(d['lede']), body, 'work.html', og=LEAD[fn])
 
 # ---------------------------------------------------------------- services: words only
@@ -251,9 +240,9 @@ page('services.html', 'Services · Painting With Purpose',
 </section>
 <figure class="page-photo">{img('assets/img/pwp-0631-painter.jpg', 'A painter on a ladder at a red shingle colonial', eager=True)}</figure>
 <section class="svc"><ul>{svc_rows}</ul></section>
-{band('tools')}
 <section class="steps">
   <p class="eyebrow">How a job runs</p>
+  {wc('can')}
   <ol>
     <li><h3>Walkthrough</h3><p>We visit, measure and talk through colors, surfaces and repairs.</p></li>
     <li><h3>Written estimate</h3><p>Scope, schedule and price, in writing and free.</p></li>
@@ -261,7 +250,7 @@ page('services.html', 'Services · Painting With Purpose',
     <li><h3>Final walkthrough</h3><p>We go over the finished job with you before we call it done.</p></li>
   </ol>
   <p class="area">Addison, Chittenden, Franklin, Grand Isle, Lamoille, Orange and Washington counties.</p>
-</section>''', 'services.html', foot='houses')
+</section>''', 'services.html')
 
 # ---------------------------------------------------------------- purpose: words only
 page('purpose.html', 'Purpose · Painting With Purpose',
@@ -277,11 +266,11 @@ page('purpose.html', 'Purpose · Painting With Purpose',
   <p>Zach and Gabe Dunn started Painting With Purpose in 2022 to show that a painting company could be very good at the work and good for the place it works. The business plan took first place at the Joy and Jerry Meyers Cup at UVM. More than a hundred jobs later, the idea is the same.</p>
   <p><a class="tlink" href="https://www.cvoeo.org/" target="_blank" rel="noopener">About CVOEO ↗</a></p>
 </section>
-{band('village')}
+<figure class="wc-band">{wc('church')}</figure>
 <section class="quote">
   <blockquote>“Their mission for giving back to the homeless community is truly amazing.”</blockquote>
   <p class="eyebrow">Pam Mathe · Google review</p>
-</section>''', 'purpose.html', foot='lake')
+</section>''', 'purpose.html')
 
 # ---------------------------------------------------------------- careers
 FORMOK = '<p class="form-ok" role="status" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>'
@@ -300,7 +289,6 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greate
   </ul>
 </section>
 <figure class="page-photo">{img('assets/img/crew-three.jpg', 'Three Painting With Purpose painters on a job, with ladders and drop cloths', eager=True)}</figure>
-{band('tools')}
 <section class="roles">
   <ul><li><a href="#apply"><span class="t">Painter</span><span class="k">Full-time · Greater Burlington</span><span class="go">Apply →</span></a></li></ul>
 </section>
@@ -316,7 +304,7 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greate
     <button class="btn submit" type="submit">Send application</button>
     {FORMOK}
   </form>
-</section>''', 'careers.html', foot='houses')
+</section>''', 'careers.html')
 
 # ---------------------------------------------------------------- contact: the porch again, as the invitation
 CONTACT_SERVICES = ['Residential painting', 'Commercial painting', 'Decks & porches', 'EMP lead inspection', 'Gutter cleaning', 'Not sure yet']
@@ -340,7 +328,7 @@ page('contact.html', 'Free estimate · Painting With Purpose', 'Tell us about yo
       {FORMOK}
     </form>
   </div>
-</section>''', 'contact.html', og='assets/hero/porch-tall.jpg', foot='lake')
+</section>''', 'contact.html', og='assets/hero/porch-tall.jpg')
 
 
 # ---------------------------------------------------------------- before & after: the one place with many photos
@@ -369,7 +357,6 @@ page('transformations.html', 'Before & after · Painting With Purpose', 'The fir
   <h1>Same house, same angle.</h1>
   <p class="lede">Drag across any photo to compare the first day with the last.</p>
 </section>
-{band('houses')}
 <section class="ba-grid">{tiles}</section>
 <p class="ba-all"><button class="tlink" type="button" data-show-more>Show all {len(TF)}</button></p>''', 'transformations.html')
 # ---------------------------------------------------------------- 404 (Vercel serves 404.html for missing paths)
