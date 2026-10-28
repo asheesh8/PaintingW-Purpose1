@@ -74,7 +74,24 @@ body.menu-open { overflow: hidden; }
 @keyframes dolly { from { transform: scale(1.1); } to { transform: scale(1); } }
 .h1-screen::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 0% 100%, rgba(10, 14, 16, .62), rgba(10, 14, 16, 0) 72%), linear-gradient(180deg, rgba(10, 14, 16, .38) 0, rgba(10, 14, 16, 0) 18%, rgba(10, 14, 16, 0) 52%, rgba(10, 14, 16, .55) 100%); pointer-events: none; }
 .h1-in { position: absolute; left: var(--g); right: var(--g); bottom: clamp(32px, 6vw, 72px); z-index: 2; }
-.h1-in h1 { font-size: clamp(34px, 4.2vw, 64px); max-width: 15ch; animation: rise 1.4s .5s var(--ease) both; }
+/* the story: one short line per hero, read as a single sentence down the page */
+.sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.beat { font: 400 clamp(38px, 5.4vw, 88px)/1.02 var(--serif); color: #fff; max-width: 15ch; text-shadow: 0 2px 24px rgba(10, 14, 16, .35); margin: 0; }
+.h1-in .beat { animation: rise 1.6s .6s var(--ease) both; }
+.reveal-beat { position: absolute; left: var(--g); bottom: clamp(40px, 9vh, 104px); z-index: 2; --b: clamp(0, (var(--r, 0) - .72) * 4, 1); opacity: var(--b); transform: translateY(calc((1 - var(--b)) * 24px)); }
+.reveal-pin::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; opacity: clamp(0, (var(--r, 0) - .6) * 2.5, 1); background: radial-gradient(ellipse 70% 60% at 0% 100%, rgba(10, 14, 16, .55), rgba(10, 14, 16, 0) 72%); }
+.inside-beat { position: absolute; left: clamp(24px, 3vw, 48px); bottom: clamp(32px, 7vh, 80px); z-index: 2; font-size: clamp(34px, 3.8vw, 64px); max-width: 13ch; }
+.inside-media::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 80% 55% at 0% 100%, rgba(10, 14, 16, .55), rgba(10, 14, 16, 0) 72%); }
+/* sound: off until the visitor asks; follows whichever clip is on screen */
+.snd { position: fixed; right: var(--g); bottom: 18px; z-index: 45; display: inline-flex; align-items: center; gap: 9px; padding: 9px 14px 9px 12px; border: 1px solid rgba(31, 30, 28, .14); border-radius: 999px; background: rgba(250, 248, 244, .86); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--ink); font: 500 12px/1 var(--sans); letter-spacing: .06em; cursor: pointer; }
+.snd:focus-visible { outline: 2px solid var(--sky); outline-offset: 3px; }
+.snd-bars { display: inline-flex; align-items: end; gap: 2px; height: 11px; }
+.snd-bars i { width: 2px; height: 3px; background: currentColor; }
+.snd.on .snd-bars i { animation: bar 1s ease-in-out infinite alternate; }
+.snd.on .snd-bars i:nth-child(2) { animation-delay: -.4s; }
+.snd.on .snd-bars i:nth-child(3) { animation-delay: -.7s; }
+@keyframes bar { from { height: 3px; } to { height: 11px; } }
+.menu-open .snd { display: none; }
 .h1-cap { position: absolute; right: var(--g); bottom: clamp(32px, 6vw, 72px); z-index: 2; font-size: 13px; letter-spacing: .04em; opacity: .85; }
 @keyframes rise { from { opacity: 0; transform: translateY(18px); } }
 /* a thin line at the foot of the hero, a quiet cue to keep moving */
@@ -83,9 +100,7 @@ body.menu-open { overflow: hidden; }
 @keyframes cue { from { transform: translateY(-100%); } to { transform: translateY(250%); } }
 .h1-media .clip.ready ~ img, .h1-media:has(.clip.ready) img { animation: none; }
 
-/* ---------- home 2: a statement and air ---------- */
-.statement { padding: var(--sec) var(--g); display: grid; gap: 28px; max-width: 1180px; }
-.statement .big { max-width: 26ch; }
+/* ---------- home 2: the Victorian opens up ---------- */
 
 /* ---------- home 3: look closer (inset grows to full bleed as you scroll) ---------- */
 .reveal { position: relative; height: 240vh; }
@@ -115,6 +130,8 @@ body.menu-open { overflow: hidden; }
 .invite-media img, .invite-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .invite-txt { align-self: center; display: grid; gap: 22px; justify-items: start; padding: var(--sec) var(--g); }
 .invite-txt h2 { font-size: clamp(54px, 7vw, 120px); }
+.invite-beat { font: 400 clamp(26px, 3vw, 44px)/1.1 var(--serif); color: var(--mute); margin-bottom: -10px; }
+.invite-txt > p:not([class]) { max-width: 40ch; color: #45413c; }
 .invite-links { display: grid; gap: 10px; justify-items: start; margin-top: 14px; font-size: 17px; }
 
 /* clips fade in over their still once they can play */
@@ -248,6 +265,12 @@ body.menu-open { overflow: hidden; }
 
 /* ---------- phone ---------- */
 @media (max-width: 760px) {
+  .inside-beat { top: calc(var(--hdr) + 28px); bottom: auto; left: var(--g); right: var(--g); }
+  .inside-media::after { background: linear-gradient(180deg, rgba(10, 14, 16, .55), rgba(10, 14, 16, 0) 42%); }
+  .snd { bottom: 14px; }
+  .h1-in { bottom: 76px; }
+  .reveal-beat { bottom: 76px; }
+  .reveal-pin::after { background: linear-gradient(180deg, rgba(10, 14, 16, 0) 45%, rgba(10, 14, 16, .6)); }
   :root { --hdr: 64px; }
   .logo img { height: 38px; }
   .hide-s { display: none; }
@@ -282,6 +305,7 @@ body.menu-open { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .snd.on .snd-bars i { animation: none; height: 8px; }
   .h1-cue::after { animation: none; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .js .rv { opacity: 1; transform: none; }

@@ -68,6 +68,8 @@ def hero_media(name, alt, eager=False, tall_only=False):
 
 
 def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', over=False):
+    snd = ('<button class="snd" type="button" aria-pressed="false"><span class="snd-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="snd-t">Sound off</span></button>\n'
+           if '<video' in body else '')
     menu = ''.join(f'<li><a href="{h}"{cur(h, current)}>{html.escape(t)}</a></li>' for h, t in MENU)
     doc = f'''<!doctype html>
 <html lang="en">
@@ -106,7 +108,7 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram</a></li><li><a href="{FB}" target="_blank" rel="noopener">Facebook</a></li></ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose · Greater Burlington, Vermont</span><span>A share of every job goes to CVOEO</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
-<script src="assets/js/site.js"></script>
+{snd}<script src="assets/js/site.js"></script>
 </body>
 </html>
 '''
@@ -123,28 +125,24 @@ def ending(line='Planning a project?'):
 # ---------------------------------------------------------------- home: four screens
 page('index.html', 'Painting With Purpose | House painters in Greater Burlington, Vermont',
      'Careful residential and commercial painting in Greater Burlington, Vermont. Part of every job helps end homelessness.',
-     f'''<section class="h1-screen">
+     f'''<section class="h1-screen" data-beat="1">
   <div class="h1-media">{hero_media('sigma', 'Sigma Phi House in Burlington: white Corinthian columns on a brick facade', eager=True)}</div>
-  <div class="h1-in"><h1>Careful painting for Vermont homes and buildings.</h1></div>
+  <div class="h1-in"><h1 class="sr">Painting With Purpose: careful painting for Vermont homes and buildings</h1><p class="beat" aria-hidden="true">Whether it’s a frat house on the hill,</p></div>
   <span class="h1-cap">Sigma Phi House, Burlington</span>
   <span class="h1-cue" aria-hidden="true"></span>
-</section>
-
-<section class="statement">
-  <p class="eyebrow rv">Painting With Purpose</p>
-  <p class="big rv">A small painting company in Greater Burlington. We prepare every surface properly, leave a clean site each evening, and give part of every job to helping Vermonters find a home.</p>
 </section>
 
 <section class="reveal" data-reveal>
   <div class="reveal-pin">
     <p class="reveal-h eyebrow">Selected work</p>
     <figure class="reveal-fig">{hero_media('victorian', 'A restored Queen Anne Victorian with layered white porches')}</figure>
+    <p class="beat reveal-beat" aria-hidden="true">a Victorian on a quiet street,</p>
   </div>
 </section>
 <p class="reveal-cap"><span>Queen Anne restoration, Burlington</span><span class="links"><a class="tlink" href="work.html">View the work</a><a class="tlink" href="transformations.html">Before &amp; after</a></span></p>
 
 <section class="inside">
-  <div class="inside-media">{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto autumn trees')}</div>
+  <div class="inside-media">{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto autumn trees')}<p class="beat inside-beat rv" aria-hidden="true">a library in the middle of town,</p></div>
   <div class="inside-items">
     <article><p class="eyebrow">01</p><h2>Interiors</h2><p>Walls, ceilings, trim and cabinets, finished to gallery standard.</p></article>
     <article><p class="eyebrow">02</p><h2>Commercial</h2><p>Libraries, storefronts and offices, scheduled so the doors stay open.</p></article>
@@ -152,18 +150,19 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
   </div>
 </section>
 
-<section class="purpose-line">
-  <p class="big rv">Part of every job goes to CVOEO, to help end homelessness in Vermont.</p>
-  <p class="rv"><span class="mute">$15,000+ given so far.</span> <a class="tlink" href="purpose.html">Our purpose</a></p>
-</section>
-
 <section class="invite">
   <figure class="invite-media">{hero_media('porch', 'A freshly painted covered porch with a diamond inlay in the floor', tall_only=True)}</figure>
   <div class="invite-txt rv">
-    <h2>Start a project.</h2>
-    <p>We’ll walk it with you and send a written estimate, free.</p>
+    <p class="invite-beat">or the porch you come home to,</p>
+    <h2>we paint with purpose.</h2>
+    <p>A small painting company in Greater Burlington. We prepare every surface properly, leave a clean site each evening, and walk every job with you before we send a written estimate, free.</p>
     <p class="invite-links"><a class="tlink" href="contact.html">Request an estimate</a><a href="tel:{TEL}">802-PAINTER · {PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a></p>
   </div>
+</section>
+
+<section class="purpose-line">
+  <p class="big rv">Part of every job goes to CVOEO, to help end homelessness in Vermont.</p>
+  <p class="rv"><span class="mute">$15,000+ given so far.</span> <a class="tlink" href="purpose.html">Our purpose</a></p>
 </section>''', over=True)
 
 
