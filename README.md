@@ -12,8 +12,14 @@ Minimal, photo-led static site (no build step needed to deploy). In the spirit o
 
 Stills live in `assets/hero/{slot}-wide.jpg` (2560×1440) and `{slot}-tall.jpg` (1080×1920, used when the screen is taller than 4:5).
 
-### Adding the Higgsfield clips
-Drop the videos in `assets/hero/` as `{slot}.mp4` (landscape) and/or `{slot}-tall.mp4` (portrait), e.g. `sigma.mp4`, `victorian.mp4`, `library.mp4`, `porch-tall.mp4`. Then run `python3 tools/build.py`. The build only adds a `<video>` when the file exists; the clip loads when it scrolls into view and fades in over the still once it can play. Keep them muted, short loops, under ~6 MB each.
+### Hero clips (silent, one per page)
+Each clip is used once, so no page carries more than one video:
+- `sigma.mp4` plays behind the home hero (the other three home screens stay photographs)
+- `victorian.mp4` heads the Queen Anne Victorian project page
+- `library.mp4` heads the Library project page
+- `porch-tall.mp4` sits beside the contact form
+
+Prepare each raw clip with `sh tools/prep_clip.sh raw.mp4 assets/hero/sigma.mp4` (first 3.5s played forward then backward, so the loop has no jump; audio removed; small H.264). Add a `-tall.mp4` portrait version if you have one, otherwise phones crop the landscape clip. Then run `python3 tools/build.py`. The build only adds a `<video>` when the file exists; it plays muted, starts when it scrolls into view and fades in over the still.
 
 ## Logo
 `assets/logo.png` is used in the header and footer. Swap the file to update it everywhere.

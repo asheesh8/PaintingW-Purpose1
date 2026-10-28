@@ -59,7 +59,7 @@
 
   /* hero clips: only present once the mp4s are dropped in; the still shows until a clip can play */
   var clips = $$('video.clip');
-  var LOOP = 6;
+  var LOOP = 8;
   if (clips.length && !still) {
     var tall = window.matchMedia('(max-aspect-ratio: 4/5)').matches;
     var start = function (v) {
@@ -67,7 +67,7 @@
       if (!src) return;
       if (!v.src) {
         v.src = src;
-        /* keep each loop short: only the first few seconds of a clip are used */
+        /* keep each loop short: clips are prepared as short loops (tools/prep_clip.sh); anything longer is cut here */
         v.addEventListener('timeupdate', function () { if (v.currentTime > LOOP) v.currentTime = 0; });
         v.addEventListener('playing', function () { v.classList.add('ready'); }, { once: true });
       }
@@ -84,44 +84,6 @@
       clips.forEach(function (v) { vo.observe(v); });
     } else clips.forEach(start);
   }
-
-  /* sound: muted until the visitor turns it on; then only the clip most in view is heard, faded in and out */
-  var snd = $('.snd');
-  if (snd && clips.length && !still) {
-    var on = false, seen = new Map();
-    var fade = function (v, to) {
-      cancelAnimationFrame(v._f);
-      if (to > 0) { v.muted = false; }
-      var step = function () {
-        var d = to - v.volume;
-        if (Math.abs(d) < 0.03) { v.volume = to; if (to === 0) v.muted = true; return; }
-        v.volume = Math.min(1, Math.max(0, v.volume + d * 0.12));
-        v._f = requestAnimationFrame(step);
-      };
-      step();
-    };
-    var mix = function () {
-      var best = null, top = 0.35;
-      seen.forEach(function (r, v) { if (r > top) { top = r; best = v; } });
-      clips.forEach(function (v) { fade(v, on && v === best ? 1 : 0); });
-    };
-    if ('IntersectionObserver' in window) {
-      var so = new IntersectionObserver(function (es) {
-        es.forEach(function (e) { seen.set(e.target, e.isIntersecting ? e.intersectionRatio : 0); });
-        if (on) mix();
-      }, { threshold: [0, 0.2, 0.35, 0.5, 0.65, 0.8, 1] });
-      clips.forEach(function (v) { so.observe(v); });
-    }
-    clips.forEach(function (v) { v.volume = 0; });
-    snd.addEventListener('click', function () {
-      on = !on;
-      snd.classList.toggle('on', on);
-      snd.setAttribute('aria-pressed', String(on));
-      $('.snd-t', snd).textContent = on ? 'Sound on' : 'Sound off';
-      if (on) clips.forEach(function (v) { if (v.src && v.paused && (seen.get(v) || 0) > 0) v.play().catch(function () {}); });
-      mix();
-    });
-  } else if (snd) snd.hidden = true;
 
   /* work index: a small photo follows the pointer over each row (pointer devices only) */
   var peek = $('.peek');

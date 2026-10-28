@@ -51,8 +51,9 @@ def img(src, alt, sizes='100vw', eager=False, cls=''):
     return f'<img{c} src="{src}"{srcset} alt="{alt}" {load} decoding="async"{pos}>'
 
 
-def hero_media(name, alt, eager=False, tall_only=False):
-    """One of the four hero photographs: a wide still with a tall crop for phones, plus the clip when it exists."""
+def hero_media(name, alt, eager=False, tall_only=False, clip=True):
+    """One of the four hero photographs: a wide still with a tall crop for phones, plus its silent clip when it exists
+    (each clip is used once on the site: Sigma on home, Victorian and Library on their project pages, Porch on contact)."""
     wide, tall = f'assets/hero/{name}-wide.jpg', f'assets/hero/{name}-tall.jpg'
     load = 'fetchpriority="high"' if eager else 'loading="lazy"'
     if tall_only or not os.path.exists(wide):
@@ -60,7 +61,7 @@ def hero_media(name, alt, eager=False, tall_only=False):
     else:
         pic = (f'<picture><source media="(max-aspect-ratio: 4/5)" srcset="{tall}">'
                f'<img src="{wide}" alt="{alt}" {load} decoding="async"></picture>')
-    vids = [v for v in (f'assets/hero/{name}.mp4', f'assets/hero/{name}-tall.mp4') if os.path.exists(v)]
+    vids = [v for v in (f'assets/hero/{name}.mp4', f'assets/hero/{name}-tall.mp4') if clip and os.path.exists(v)]
     if vids:
         attrs = ' '.join(f'data-src{"-tall" if v.endswith("-tall.mp4") else ""}="{v}"' for v in vids)
         pic += f'<video class="clip" muted playsinline loop preload="{"auto" if eager else "none"}" aria-hidden="true" {attrs}></video>'
@@ -68,8 +69,6 @@ def hero_media(name, alt, eager=False, tall_only=False):
 
 
 def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', over=False):
-    snd = ('<button class="snd" type="button" aria-pressed="false"><span class="snd-bars" aria-hidden="true"><i></i><i></i><i></i></span><span class="snd-t">Sound off</span></button>\n'
-           if '<video' in body else '')
     menu = ''.join(f'<li><a href="{h}"{cur(h, current)}>{html.escape(t)}</a></li>' for h, t in MENU)
     doc = f'''<!doctype html>
 <html lang="en">
@@ -108,7 +107,7 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram</a></li><li><a href="{FB}" target="_blank" rel="noopener">Facebook</a></li></ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose · Greater Burlington, Vermont</span><span>A share of every job goes to CVOEO</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
-{snd}<script src="assets/js/site.js"></script>
+<script src="assets/js/site.js"></script>
 </body>
 </html>
 '''
@@ -135,14 +134,14 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
 <section class="reveal" data-reveal>
   <div class="reveal-pin">
     <p class="reveal-h eyebrow">Selected work</p>
-    <figure class="reveal-fig">{hero_media('victorian', 'A restored Queen Anne Victorian with layered white porches')}</figure>
+    <figure class="reveal-fig">{hero_media('victorian', 'A restored Queen Anne Victorian with layered white porches', clip=False)}</figure>
     <p class="beat reveal-beat" aria-hidden="true">a Victorian on a quiet street,</p>
   </div>
 </section>
 <p class="reveal-cap"><span>Queen Anne restoration, Burlington</span><span class="links"><a class="tlink" href="work.html">View the work</a><a class="tlink" href="transformations.html">Before &amp; after</a></span></p>
 
 <section class="inside">
-  <div class="inside-media">{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto autumn trees')}<p class="beat inside-beat rv" aria-hidden="true">a library in the middle of town,</p></div>
+  <div class="inside-media">{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto autumn trees', clip=False)}<p class="beat inside-beat rv" aria-hidden="true">a library in the middle of town,</p></div>
   <div class="inside-items">
     <p class="eyebrow">What we paint</p>
     <ul class="inside-list">
@@ -155,7 +154,7 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
 </section>
 
 <section class="invite">
-  <figure class="invite-media">{hero_media('porch', 'A freshly painted covered porch with a diamond inlay in the floor', tall_only=True)}</figure>
+  <figure class="invite-media">{hero_media('porch', 'A freshly painted covered porch with a diamond inlay in the floor', tall_only=True, clip=False)}</figure>
   <div class="invite-txt rv">
     <p class="invite-beat">or the porch you come home to,</p>
     <h2>we paint with purpose.</h2>
@@ -190,7 +189,9 @@ for i, fn in enumerate(ORDER):
     d = P[fn]
     facts = d['facts'].replace('<dt>', '<div><dt>').replace('</dd>', '</dd></div>') + '<div><dt>Photography</dt><dd>Gabe Dunn</dd></div>'
     nxt = ORDER[(i + 1) % len(ORDER)]
-    body = f'''<section class="pj-hero">{img(LEAD[fn], plain(d['title']), eager=True)}</section>
+    slot = LEAD[fn].split('/')[-1].replace('-wide.jpg', '') if LEAD[fn].startswith('assets/hero/') else None
+    hero = hero_media(slot, plain(d['title']), eager=True, clip=slot != 'sigma') if slot else img(LEAD[fn], plain(d['title']), eager=True)
+    body = f'''<section class="pj-hero">{hero}</section>
 <section class="pj-head">
   <p class="eyebrow">{d['kind']}</p>
   <h1>{d['title']}</h1>
