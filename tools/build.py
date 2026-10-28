@@ -219,7 +219,7 @@ for i, fn in enumerate(ORDER):
     page(fn, f'{html.unescape(d["title"])} | Painting With Purpose', html.escape(html.unescape(d['lede'])), body, None, hero)
 
 # ---------------------------------------------------------------- transformations
-th = ''.join(f'<button class="tf-th" type="button" data-i="{i}" data-cat="{t["cat"]}" aria-label="Show {t["title"]}"><span class="tf-img"><img src="assets/ba/{t["id"]}-after.jpg" alt="" loading="lazy"><img class="bf" src="assets/ba/{t["id"]}-before.jpg" alt="" loading="lazy"></span><span class="tf-cap"><b>{t["title"]}</b></span></button>' for i, t in enumerate(TF))
+th = ''.join(f'<button class="tf-th" type="button" data-i="{i}" data-cat="{t["cat"]}" aria-label="Show {t["title"]}"><span class="tf-img"><img src="assets/ba/{t["id"]}-after-th.jpg" alt="" loading="lazy"><img class="bf" src="assets/ba/{t["id"]}-before-th.jpg" alt="" loading="lazy"></span><span class="tf-cap"><b>{t["title"]}</b></span></button>' for i, t in enumerate(TF))
 chips = ''.join(f'<button class="chipb" type="button" data-tf-filter="{k}" aria-pressed="{"true" if k == "all" else "false"}">{v}</button>' for k, v in [('all', 'All'), ('exterior', 'Exterior'), ('interior', 'Interior'), ('decks', 'Porches & decks'), ('repair', 'Repairs'), ('commercial', 'Commercial')])
 tf = f'''<section class="wrap phead">
   <span class="meta">Before &amp; after</span>
