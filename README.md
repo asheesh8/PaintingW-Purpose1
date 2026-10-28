@@ -19,7 +19,7 @@ Each clip is used once, so no page carries more than one video:
 - `library.mp4` heads the Library project page
 - `porch-tall.mp4` sits beside the contact form
 
-Prepare each raw clip with `sh tools/prep_clip.sh raw.mp4 assets/hero/sigma.mp4` (first 3.5s played forward then backward, so the loop has no jump; audio removed; small H.264). Add a `-tall.mp4` portrait version if you have one, otherwise phones crop the landscape clip. Then run `python3 tools/build.py`. The build only adds a `<video>` when the file exists; it plays muted, starts when it scrolls into view and fades in over the still.
+Prepare each raw clip with `sh tools/prep_clip.sh raw.mp4 assets/hero/sigma.mp4` (keeps the first 7s, removes audio, small H.264; the site loops each clip by dissolving back to its still). Add a `-tall.mp4` portrait version if you have one, otherwise phones crop the landscape clip. Then run `python3 tools/build.py`. The build only adds a `<video>` when the file exists; it plays muted, starts when it scrolls into view and fades in over the still.
 
 ## Logo
 `assets/logo.png` is used in the header and footer. Swap the file to update it everywhere.

@@ -59,7 +59,6 @@
 
   /* hero clips: only present once the mp4s are dropped in; the still shows until a clip can play */
   var clips = $$('video.clip');
-  var LOOP = 8;
   if (clips.length && !still) {
     var tall = window.matchMedia('(max-aspect-ratio: 4/5)').matches;
     var start = function (v) {
@@ -67,9 +66,12 @@
       if (!src) return;
       if (!v.src) {
         v.src = src;
-        /* keep each loop short: clips are prepared as short loops (tools/prep_clip.sh); anything longer is cut here */
-        v.addEventListener('timeupdate', function () { if (v.currentTime > LOOP) v.currentTime = 0; });
-        v.addEventListener('playing', function () { v.classList.add('ready'); }, { once: true });
+        v.addEventListener('playing', function () { v.classList.add('ready'); });
+        /* loop by dissolving back to the still (the clip's first frame), then playing again */
+        v.addEventListener('ended', function () {
+          v.classList.remove('ready');
+          setTimeout(function () { v.currentTime = 0; v.play().catch(function () {}); }, 900);
+        });
       }
       var p = v.play();
       if (p && p.catch) p.catch(function () {});

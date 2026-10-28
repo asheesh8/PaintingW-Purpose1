@@ -64,7 +64,7 @@ def hero_media(name, alt, eager=False, tall_only=False, clip=True):
     vids = [v for v in (f'assets/hero/{name}.mp4', f'assets/hero/{name}-tall.mp4') if clip and os.path.exists(v)]
     if vids:
         attrs = ' '.join(f'data-src{"-tall" if v.endswith("-tall.mp4") else ""}="{v}"' for v in vids)
-        pic += f'<video class="clip" muted playsinline loop preload="{"auto" if eager else "none"}" aria-hidden="true" {attrs}></video>'
+        pic += f'<video class="clip" muted playsinline preload="{"auto" if eager else "none"}" aria-hidden="true" {attrs}></video>'
     return pic
 
 
