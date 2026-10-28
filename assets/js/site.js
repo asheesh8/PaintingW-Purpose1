@@ -1,4 +1,4 @@
-/* Painting With Purpose, demo 1: menu, scroll motion, hero clips, work peek, before/after sliders, demo forms. No libraries. */
+/* Painting With Purpose, demo 1: menu, solid header, hero clips, work peek, before/after sliders, demo forms. No libraries. */
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -27,35 +27,11 @@
   });
   $$('a', menu).forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
 
-  /* scroll: solid header once past the top, reveal progress */
-  var reveals = $$('[data-reveal]');
+  /* scroll: the header turns solid once past the top; nothing else is tied to scroll */
   var ticking = false;
-  function onScroll() {
-    ticking = false;
-    var vh = window.innerHeight;
-    body.classList.toggle('scrolled', window.scrollY > 40);
-    reveals.forEach(function (el) {
-      var r = el.getBoundingClientRect();
-      var span = Math.max(1, r.height - vh);
-      var p = still ? 1 : Math.min(1, Math.max(0, -r.top / (span * 0.75)));
-      el.style.setProperty('--r', p.toFixed(4));
-    });
-  }
-  function req() { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }
-  window.addEventListener('scroll', req, { passive: true });
-  window.addEventListener('resize', req);
+  function onScroll() { ticking = false; body.classList.toggle('scrolled', window.scrollY > 40); }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
   onScroll();
-
-  /* quiet fade-up for blocks marked .rv */
-  var rvs = $$('.rv');
-  if ('IntersectionObserver' in window && !still) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -10% 0px' });
-    rvs.forEach(function (el) { io.observe(el); });
-  } else {
-    rvs.forEach(function (el) { el.classList.add('in'); });
-  }
 
   /* hero clips: only present once the mp4s are dropped in; the still shows until a clip can play */
   var clips = $$('video.clip');

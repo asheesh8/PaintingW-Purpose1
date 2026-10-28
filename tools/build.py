@@ -131,7 +131,7 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
   <span class="h1-cue" aria-hidden="true"></span>
 </section>
 
-<section class="reveal" data-reveal>
+<section class="reveal">
   <div class="reveal-pin">
     <p class="reveal-h eyebrow">Selected work</p>
     <figure class="reveal-fig">{hero_media('victorian', 'A restored Queen Anne Victorian with layered white porches', clip=False)}</figure>
