@@ -65,14 +65,18 @@ def hero_media(name, alt, eager=False, tall_only=False, clip=True):
     else:
         pic = (f'<picture><source media="(max-aspect-ratio: 4/5)" srcset="{tall}">'
                f'<img src="{wide}" alt="{alt}" {load} decoding="async"></picture>')
-    vids = [v for v in (f'assets/hero/{name}.mp4', f'assets/hero/{name}-tall.mp4') if clip and os.path.exists(v)]
+    kinds = (('', f'assets/hero/{name}.mp4'), ('-sm', f'assets/hero/{name}-720.mp4'), ('-tall', f'assets/hero/{name}-tall.mp4'))
+    vids = [(k, v) for k, v in kinds if clip and os.path.exists(v)]
     if vids:
-        attrs = ' '.join(f'data-src{"-tall" if v.endswith("-tall.mp4") else ""}="{v}"' for v in vids)
+        attrs = ' '.join(f'data-src{k}="{v}"' for k, v in vids)
         pic += f'<video class="clip" muted playsinline preload="{"auto" if eager else "none"}" aria-hidden="true" {attrs}></video>'
     return pic
 
 
-def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', over=False):
+SITE = 'https://paintingwithpurpose01.vercel.app'
+
+
+def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
     menu = ''.join(f'<li><a href="{h}"{cur(h, current)}>{html.escape(t)}</a></li>' for h, t in MENU)
     doc = f'''<!doctype html>
 <html lang="en">
@@ -84,7 +88,12 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
 <meta name="theme-color" content="#FAF8F4">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
-<meta property="og:image" content="{og}">
+<meta property="og:image" content="{SITE}/{og}">
+<meta property="og:url" content="{SITE}/{fn}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Painting With Purpose">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="{SITE}/{fn}">
 <link rel="icon" href="assets/favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -251,7 +260,7 @@ page('purpose.html', 'Purpose · Painting With Purpose',
 </section>''', 'purpose.html')
 
 # ---------------------------------------------------------------- careers
-FORMOK = '<p class="form-ok" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>'
+FORMOK = '<p class="form-ok" role="status" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>'
 page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greater Burlington. $18 to $30 an hour, paid lunch and room to grow.',
      f'''<section class="phead">
   <p class="eyebrow">Careers</p>
@@ -309,13 +318,16 @@ page('contact.html', 'Free estimate · Painting With Purpose', 'Tell us about yo
 
 
 # ---------------------------------------------------------------- before & after: the one place with many photos
+BASZ = '(max-width: 760px) 46vw, (max-width: 1024px) 46vw, 30vw'
+
+
 def ba_frame(t):
     if t['dip']:  # different angles: show the two frames side by side instead of a slider
-        return (f'<div class="ba-frame ba-dip"><img src="assets/ba/{t["id"]}-before.jpg" alt="{t["title"]}, before" loading="lazy" decoding="async">'
-                f'<img src="assets/ba/{t["id"]}-after.jpg" alt="{t["title"]}, after" loading="lazy" decoding="async"></div>')
+        return (f'<div class="ba-frame ba-dip"><img src="assets/ba/{t["id"]}-before.jpg" srcset="assets/ba/{t["id"]}-before-th.jpg 480w, assets/ba/{t["id"]}-before.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, before" loading="lazy" decoding="async">'
+                f'<img src="assets/ba/{t["id"]}-after.jpg" srcset="assets/ba/{t["id"]}-after-th.jpg 480w, assets/ba/{t["id"]}-after.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, after" loading="lazy" decoding="async"></div>')
     return f'''<div class="ba-frame" style="--p:50%">
-    <img src="assets/ba/{t["id"]}-before.jpg" alt="{t["title"]}, before" loading="lazy" decoding="async">
-    <img class="ba-after" src="assets/ba/{t["id"]}-after.jpg" alt="{t["title"]}, after" loading="lazy" decoding="async">
+    <img src="assets/ba/{t["id"]}-before.jpg" srcset="assets/ba/{t["id"]}-before-th.jpg 480w, assets/ba/{t["id"]}-before.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, before" loading="lazy" decoding="async">
+    <img class="ba-after" src="assets/ba/{t["id"]}-after.jpg" srcset="assets/ba/{t["id"]}-after-th.jpg 480w, assets/ba/{t["id"]}-after.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, after" loading="lazy" decoding="async">
     <span class="ba-tag b">Before</span><span class="ba-tag a">After</span>
     <span class="ba-line" aria-hidden="true"></span>
     <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Compare before and after: {t["title"]}">

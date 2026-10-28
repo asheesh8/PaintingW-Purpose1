@@ -19,7 +19,10 @@ Each clip is used once, so no page carries more than one video:
 - `library.mp4` heads the Library project page
 - `porch-tall.mp4` sits beside the contact form
 
-Prepare each raw clip with `sh tools/prep_clip.sh raw.mp4 assets/hero/sigma.mp4` (keeps the first 7s, removes audio, small H.264; the site loops each clip by dissolving back to its still). Add a `-tall.mp4` portrait version if you have one, otherwise phones crop the landscape clip. Then run `python3 tools/build.py`. The build only adds a `<video>` when the file exists; it plays muted, starts when it scrolls into view and fades in over the still.
+Prepare each raw clip with `sh tools/prep_clip.sh raw.mp4 assets/hero/sigma.mp4` (keeps the first 7s, removes audio, small H.264; the site loops each clip by dissolving back to its still). Each slot can also have `{slot}-720.mp4` (used on screens under 1100px wide) and `{slot}-tall.mp4` (a 9:16 crop for phones); the build picks up whichever exist. Then run `python3 tools/build.py`. The build only adds a `<video>` when the file exists; it plays muted, starts when it scrolls into view and fades in over the still.
+
+## Sharing
+Link previews use `assets/og.jpg` (1200×630) and absolute URLs on `paintingwithpurpose01.vercel.app` (see `SITE` in `tools/build.py`). Change `SITE` if the domain changes.
 
 ## Logo
 Transparent logo files are in `assets/`: `logo-navy-*.png` (header once scrolled, footer), `logo-white-*.png` (header over the home hero) and `logo-watermark.webp` (the faint lettering behind the footer). Sources, including SVGs and a sticker version, are in the project files under `logo/`.

@@ -49,7 +49,8 @@
   if (clips.length && !still) {
     var tall = window.matchMedia('(max-aspect-ratio: 4/5)').matches;
     var start = function (v) {
-      var src = (tall && v.dataset.srcTall) || v.dataset.src || v.dataset.srcTall;
+      var small = window.innerWidth < 1100;
+      var src = (tall && v.dataset.srcTall) || (small && v.dataset.srcSm) || v.dataset.src || v.dataset.srcSm || v.dataset.srcTall;
       if (!src) return;
       if (!v.src) {
         v.src = src;
