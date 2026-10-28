@@ -27,9 +27,8 @@
   });
   $$('a', menu).forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
 
-  /* scroll: solid header once past the top, reveal progress, which "inside" item is current */
+  /* scroll: solid header once past the top, reveal progress */
   var reveals = $$('[data-reveal]');
-  var items = $$('.inside-items article');
   var ticking = false;
   function onScroll() {
     ticking = false;
@@ -41,15 +40,6 @@
       var p = still ? 1 : Math.min(1, Math.max(0, -r.top / (span * 0.75)));
       el.style.setProperty('--r', p.toFixed(4));
     });
-    if (items.length) {
-      var best = null, dist = Infinity;
-      items.forEach(function (a) {
-        var r = a.getBoundingClientRect();
-        var d = Math.abs(r.top + r.height / 2 - vh / 2);
-        if (d < dist) { dist = d; best = a; }
-      });
-      items.forEach(function (a) { a.classList.toggle('on', a === best); });
-    }
   }
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }
   window.addEventListener('scroll', req, { passive: true });
@@ -69,6 +59,7 @@
 
   /* hero clips: only present once the mp4s are dropped in; the still shows until a clip can play */
   var clips = $$('video.clip');
+  var LOOP = 6;
   if (clips.length && !still) {
     var tall = window.matchMedia('(max-aspect-ratio: 4/5)').matches;
     var start = function (v) {
@@ -76,6 +67,8 @@
       if (!src) return;
       if (!v.src) {
         v.src = src;
+        /* keep each loop short: only the first few seconds of a clip are used */
+        v.addEventListener('timeupdate', function () { if (v.currentTime > LOOP) v.currentTime = 0; });
         v.addEventListener('playing', function () { v.classList.add('ready'); }, { once: true });
       }
       var p = v.play();

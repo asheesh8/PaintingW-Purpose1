@@ -70,7 +70,7 @@ body.menu-open { overflow: hidden; }
 /* ---------- home 1: arrive (Sigma Phi) ---------- */
 .h1-screen { position: relative; height: 100svh; min-height: 560px; overflow: hidden; color: #fff; background: #2b2a28; }
 .h1-media, .h1-media picture, .h1-media img, .h1-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.h1-media img { animation: dolly 9s var(--ease) both; }
+.h1-media img { animation: dolly 6s var(--ease) both; }
 @keyframes dolly { from { transform: scale(1.1); } to { transform: scale(1); } }
 .h1-screen::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 0% 100%, rgba(10, 14, 16, .62), rgba(10, 14, 16, 0) 72%), linear-gradient(180deg, rgba(10, 14, 16, .38) 0, rgba(10, 14, 16, 0) 18%, rgba(10, 14, 16, 0) 52%, rgba(10, 14, 16, .55) 100%); pointer-events: none; }
 .h1-in { position: absolute; left: var(--g); right: var(--g); bottom: clamp(32px, 6vw, 72px); z-index: 2; }
@@ -103,7 +103,7 @@ body.menu-open { overflow: hidden; }
 /* ---------- home 2: the Victorian opens up ---------- */
 
 /* ---------- home 3: look closer (inset grows to full bleed as you scroll) ---------- */
-.reveal { position: relative; height: 240vh; }
+.reveal { position: relative; height: 160vh; }
 .reveal-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; }
 .reveal-h { position: absolute; top: calc(var(--hdr) + 24px); left: var(--g); z-index: 2; opacity: calc(1 - var(--r, 0) * 2); }
 .reveal-fig { position: absolute; inset: 0; clip-path: inset(calc((1 - var(--r, 0)) * 24%) calc((1 - var(--r, 0)) * 30%)); will-change: clip-path; }
@@ -112,15 +112,14 @@ body.menu-open { overflow: hidden; }
 .reveal-cap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px 28px; padding: 18px var(--g) 0; font-size: 14px; color: var(--mute); }
 .reveal-cap .links { display: flex; gap: 26px; }
 
-/* ---------- home 4: step inside (sticky photograph, three lines pass it) ---------- */
-.inside { display: grid; grid-template-columns: 2fr 3fr; margin-top: var(--sec); }
-.inside-media { grid-column: 2; grid-row: 1; position: sticky; top: 0; height: 100svh; overflow: hidden; }
+/* ---------- home 3: one screen, the library beside what we paint ---------- */
+.inside { display: grid; grid-template-columns: 2fr 3fr; height: 100svh; min-height: 560px; }
+.inside-media { grid-column: 2; grid-row: 1; position: relative; overflow: hidden; }
 .inside-media picture, .inside-media img, .inside-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.inside-items { grid-column: 1; grid-row: 1; }
-.inside-items article { min-height: 100svh; display: grid; align-content: center; gap: 16px; padding: 0 var(--g); max-width: 520px; opacity: .25; transition: opacity .8s var(--ease); }
-.inside-items article.on { opacity: 1; }
-.inside-items h2 { font-size: clamp(44px, 5vw, 80px); }
-.inside-items p { color: #45413c; font-size: 17px; }
+.inside-items { grid-column: 1; grid-row: 1; align-self: center; display: grid; gap: 26px; padding: 0 var(--g); }
+.inside-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.inside-list h2 { font-size: clamp(34px, 3.4vw, 56px); }
+.inside-list p { color: var(--mute); font-size: 15px; margin-top: 2px; }
 
 /* ---------- home 5 + 6: purpose line, then the invitation (porch) ---------- */
 .purpose-line { padding: var(--sec) var(--g); display: grid; gap: 22px; justify-items: center; text-align: center; }
@@ -128,14 +127,15 @@ body.menu-open { overflow: hidden; }
 .invite { display: grid; grid-template-columns: 2fr 3fr; min-height: 100svh; }
 .invite-media { position: relative; overflow: hidden; }
 .invite-media img, .invite-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.invite-txt { align-self: center; display: grid; gap: 22px; justify-items: start; padding: var(--sec) var(--g); }
+.invite-txt { align-self: center; display: grid; gap: 20px; justify-items: start; padding: 64px var(--g); }
 .invite-txt h2 { font-size: clamp(54px, 7vw, 120px); }
 .invite-beat { font: 400 clamp(26px, 3vw, 44px)/1.1 var(--serif); color: var(--mute); margin-bottom: -10px; }
 .invite-txt > p:not([class]) { max-width: 40ch; color: #45413c; }
-.invite-links { display: grid; gap: 10px; justify-items: start; margin-top: 14px; font-size: 17px; }
+.invite-links { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-top: 6px; font-size: 17px; }
+.invite-give { font-size: 14px; color: var(--mute); max-width: 44ch; padding-top: 18px; border-top: 1px solid var(--line); }
 
 /* clips fade in over their still once they can play */
-.clip { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.2s var(--ease); }
+.clip { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .6s var(--ease); }
 .clip.ready { opacity: 1; }
 
 /* ---------- inner pages ---------- */
@@ -252,7 +252,7 @@ body.menu-open { overflow: hidden; }
 .ftr-bot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: clamp(40px, 5vw, 72px); padding-top: 18px; border-top: 1px solid var(--line); color: var(--mute); font-size: 13px; }
 
 /* text and blocks rise gently as they enter */
-.js .rv { opacity: 0; transform: translateY(22px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); }
+.js .rv { opacity: 0; transform: translateY(22px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
 .js .rv.in { opacity: 1; transform: none; }
 
 /* ---------- tablet ---------- */
@@ -265,8 +265,8 @@ body.menu-open { overflow: hidden; }
 
 /* ---------- phone ---------- */
 @media (max-width: 760px) {
-  .inside-beat { top: calc(var(--hdr) + 28px); bottom: auto; left: var(--g); right: var(--g); }
-  .inside-media::after { background: linear-gradient(180deg, rgba(10, 14, 16, .55), rgba(10, 14, 16, 0) 42%); }
+  .inside-beat { left: var(--g); right: var(--g); bottom: 28px; }
+  .inside-media::after { background: linear-gradient(180deg, rgba(10, 14, 16, 0) 45%, rgba(10, 14, 16, .6)); }
   .snd { bottom: 14px; }
   .h1-in { bottom: 76px; }
   .reveal-beat { bottom: 76px; }
@@ -276,20 +276,17 @@ body.menu-open { overflow: hidden; }
   .hide-s { display: none; }
   .menu { grid-template-columns: 1fr; align-content: start; }
   .h1-cap { display: none; }
-  .reveal { height: 200vh; }
+  .reveal { height: 150vh; }
   .reveal-fig { clip-path: inset(calc((1 - var(--r, 0)) * 18%) calc((1 - var(--r, 0)) * 14%)); }
   .reveal-cap { flex-direction: column; }
-  /* step inside: the photo stays put full screen and the three lines pass over it */
-  .inside { display: block; position: relative; }
-  .inside-media { position: sticky; top: 0; height: 100svh; }
-  .inside-items { position: relative; margin-top: -100svh; z-index: 1; }
-  .inside-items article { min-height: 100svh; align-content: end; padding: 0 var(--g) 56px; max-width: none; color: #fff; opacity: 1;
-    background: linear-gradient(180deg, rgba(10, 14, 16, 0) 30%, rgba(10, 14, 16, .55) 62%, rgba(10, 14, 16, .82)); text-shadow: 0 1px 12px rgba(10, 14, 16, .35); }
-  .inside-items article p { color: rgba(255, 255, 255, .9); }
-  .inside-items .tlink { color: #fff; border-color: rgba(255, 255, 255, .7); }
-  .inside-items .eyebrow { color: rgba(255, 255, 255, .8); }
+  /* step inside: photo with its line, then the three services, compact */
+  .inside { display: block; height: auto; min-height: 0; }
+  .inside-media { height: 72svh; }
+  .inside-items { padding: 40px var(--g) 8px; gap: 20px; }
+  .inside-list { gap: 12px; }
   .invite, .contact { grid-template-columns: 1fr; }
-  .invite-media { height: 78svh; }
+  .invite-media { height: 72svh; }
+  .invite-txt { padding: 40px var(--g) 56px; }
   .contact-media { height: 46svh; }
   .prow { grid-template-columns: 36px minmax(0, 1fr); }
   .prow .k, .prow .l { display: none; }

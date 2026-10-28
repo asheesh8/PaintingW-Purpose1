@@ -144,9 +144,13 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
 <section class="inside">
   <div class="inside-media">{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto autumn trees')}<p class="beat inside-beat rv" aria-hidden="true">a library in the middle of town,</p></div>
   <div class="inside-items">
-    <article><p class="eyebrow">01</p><h2>Interiors</h2><p>Walls, ceilings, trim and cabinets, finished to gallery standard.</p></article>
-    <article><p class="eyebrow">02</p><h2>Commercial</h2><p>Libraries, storefronts and offices, scheduled so the doors stay open.</p></article>
-    <article><p class="eyebrow">03</p><h2>Historic</h2><p>Victorians and pre-1978 homes, with certified lead-safe practice.</p><p><a class="tlink" href="services.html">All services</a></p></article>
+    <p class="eyebrow">What we paint</p>
+    <ul class="inside-list">
+      <li><h2>Interiors</h2><p>Walls, ceilings, trim and cabinets.</p></li>
+      <li><h2>Commercial</h2><p>Scheduled so the doors stay open.</p></li>
+      <li><h2>Historic</h2><p>Certified lead-safe, pre-1978 homes.</p></li>
+    </ul>
+    <p><a class="tlink" href="services.html">All services</a></p>
   </div>
 </section>
 
@@ -155,14 +159,10 @@ page('index.html', 'Painting With Purpose | House painters in Greater Burlington
   <div class="invite-txt rv">
     <p class="invite-beat">or the porch you come home to,</p>
     <h2>we paint with purpose.</h2>
-    <p>A small painting company in Greater Burlington. We prepare every surface properly, leave a clean site each evening, and walk every job with you before we send a written estimate, free.</p>
-    <p class="invite-links"><a class="tlink" href="contact.html">Request an estimate</a><a href="tel:{TEL}">802-PAINTER · {PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a></p>
+    <p>A small painting company in Greater Burlington. Careful prep, a clean site every evening, and a free written estimate.</p>
+    <p class="invite-links"><a class="tlink" href="contact.html">Request an estimate</a><a href="tel:{TEL}">802-PAINTER · {PHONE}</a></p>
+    <p class="invite-give">Part of every job goes to CVOEO, to help end homelessness in Vermont. $15,000+ so far. <a class="tlink" href="purpose.html">Our purpose</a></p>
   </div>
-</section>
-
-<section class="purpose-line">
-  <p class="big rv">Part of every job goes to CVOEO, to help end homelessness in Vermont.</p>
-  <p class="rv"><span class="mute">$15,000+ given so far.</span> <a class="tlink" href="purpose.html">Our purpose</a></p>
 </section>''', over=True)
 
 
