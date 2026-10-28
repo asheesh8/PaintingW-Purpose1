@@ -29,8 +29,19 @@
 
   /* scroll: the header turns solid once past the top; nothing else is tied to scroll */
   var ticking = false;
-  function onScroll() { ticking = false; body.classList.toggle('scrolled', window.scrollY > 40); }
+  /* the header goes clear (white logo and links) while a full-width photo is under it */
+  var darks = $$('[data-dark]');
+  function onScroll() {
+    ticking = false;
+    body.classList.toggle('scrolled', window.scrollY > 40);
+    var h = 40, w = window.innerWidth;
+    body.classList.toggle('ondark', darks.some(function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top <= 1 && r.bottom > h && r.left <= 1 && r.right >= w - 1;
+    }));
+  }
   window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  window.addEventListener('resize', onScroll);
   onScroll();
 
   /* hero clips: only present once the mp4s are dropped in; the still shows until a clip can play */
@@ -82,6 +93,13 @@
   $$('.ba-frame:not(.ba-dip)').forEach(function (f) {
     var r = $('.ba-range', f);
     if (r) r.addEventListener('input', function () { f.style.setProperty('--p', r.value + '%'); });
+  });
+
+  /* before & after: nine pairs first, the rest on request */
+  var more = $('[data-show-more]');
+  if (more) more.addEventListener('click', function () {
+    $$('.ba[data-more]').forEach(function (f) { f.hidden = false; });
+    more.parentNode.hidden = true;
   });
 
   /* demo forms: check required fields, then thank (nothing is sent) */

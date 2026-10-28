@@ -32,6 +32,9 @@ LEAD = {'project-sigma-phi-house.html': 'assets/hero/sigma-wide.jpg', 'project-q
         'project-library.html': 'assets/hero/library-wide.jpg', 'project-built-ins-and-porch.html': 'assets/img/pwp-1094.jpg',
         'project-lake-cottage.html': 'assets/img/pwp-0701.jpg', 'project-red-shingle-colonial.html': 'assets/img/pwp-0631.jpg',
         'project-dealership.html': 'assets/img/pwp-1337.jpg'}
+MORE = {'project-sigma-phi-house.html': 'assets/img/pwp-0179-door.jpg', 'project-queen-anne-victorian.html': 'assets/img/pwp-0058-gable.jpg',
+        'project-library.html': 'assets/img/pwp-0856.jpg', 'project-built-ins-and-porch.html': 'assets/img/pwp-1094-shelves.jpg',
+        'project-lake-cottage.html': 'assets/img/pwp-0686.jpg', 'project-red-shingle-colonial.html': 'assets/img/pwp-0631-windows.jpg'}
 POS = {'assets/img/pwp-0701.jpg': '40% 60%', 'assets/img/pwp-1337.jpg': '50% 40%', 'assets/img/pwp-1094.jpg': '50% 40%'}
 
 
@@ -82,7 +85,8 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:image" content="{og}">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif&display=swap">
@@ -92,7 +96,7 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
 <a class="skip" href="#main">Skip to content</a>
 <header class="hdr">
   <a class="logo" href="index.html" aria-label="Painting With Purpose, home"><img class="logo-n" src="assets/logo-navy-180.png" srcset="assets/logo-navy-360.png 2x" alt="Painting With Purpose" width="180" height="116"><img class="logo-w" src="assets/logo-white-180.png" srcset="assets/logo-white-360.png 2x" alt="" width="180" height="116"></a>
-  <nav class="hdr-r" aria-label="Primary"><a class="hide-s" href="work.html"{cur("work.html", current)}>Work</a><a href="contact.html"{cur("contact.html", current)}>Free estimate</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button></nav>
+  <nav class="hdr-r" aria-label="Primary"><a class="hide-s" href="work.html"{cur("work.html", current)}>Work</a><a href="contact.html"{cur("contact.html", current)}>Contact</a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button></nav>
 </header>
 <div class="menu" id="menu" hidden>
   <ul class="menu-l">{menu}</ul>
@@ -102,11 +106,10 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
 {body}
 </main>
 <footer class="ftr">
-  <a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a>
-  <p class="ftr-line">Good painting that does some good.</p>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p></div>
+  <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></li><li class="mute">{ADDRESS}</li></ul>
   <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
-  <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">Instagram</a></li><li><a href="{FB}" target="_blank" rel="noopener">Facebook</a></li></ul>
-  <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC · {ADDRESS}</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
+  <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
 <script src="assets/js/site.js"></script>
 </body>
@@ -115,34 +118,26 @@ def page(fn, title, desc, body, current=None, og='assets/hero/sigma-wide.jpg', o
     open(fn, 'w').write(doc)
 
 
-def ending(line='Have a project in mind?'):
-    return f'''<section class="ending">
-  <h2>{line}</h2>
-  <p><a class="tlink" href="contact.html">Request a free estimate</a> <span class="mute">or call</span> <a class="tlink" href="tel:{TEL}">802-PAINTER</a></p>
-</section>'''
-
-
 # ---------------------------------------------------------------- home: four screens
 page('index.html', 'Painting With Purpose · House painters in Greater Burlington, Vermont',
      'Residential and commercial painting in Greater Burlington, Vermont. Part of every job helps end homelessness in Vermont.',
-     f'''<section class="h1-screen" data-beat="1">
+     f'''<section class="h1-screen" data-dark>
   <div class="h1-media">{hero_media('sigma', 'Sigma Phi House in Burlington, white Corinthian columns against red brick', eager=True)}</div>
   <div class="h1-in"><h1 class="sr">Painting With Purpose: house and commercial painters in Greater Burlington, Vermont</h1><p class="beat" aria-hidden="true">Whether it’s a frat house on the hill,</p></div>
-  <span class="h1-cap">Sigma Phi House · Burlington</span>
+  <a class="cap" href="project-sigma-phi-house.html">Sigma Phi House · Burlington →</a>
   <span class="h1-cue" aria-hidden="true"></span>
 </section>
 
-<section class="reveal">
+<section class="reveal" data-dark>
   <div class="reveal-pin">
-    <p class="reveal-h eyebrow">Selected work</p>
     <figure class="reveal-fig">{hero_media('victorian', 'A restored Queen Anne Victorian with layered white porches', clip=False)}</figure>
     <p class="beat reveal-beat" aria-hidden="true">a Victorian on a quiet street,</p>
+    <a class="cap" href="project-queen-anne-victorian.html">Queen Anne Victorian · Burlington →</a>
   </div>
 </section>
-<p class="reveal-cap"><span>Queen Anne Victorian · Burlington</span><span class="links"><a class="tlink" href="work.html">See the work</a><a class="tlink" href="transformations.html">Before &amp; after</a></span></p>
 
 <section class="inside">
-  <div class="inside-media">{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<p class="beat inside-beat" aria-hidden="true">a library in the middle of town,</p></div>
+  <div class="inside-media" data-dark>{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<p class="beat inside-beat" aria-hidden="true">a library in the middle of town,</p></div>
   <div class="inside-items">
     <p class="eyebrow">What we paint</p>
     <ul class="inside-list">
@@ -155,7 +150,7 @@ page('index.html', 'Painting With Purpose · House painters in Greater Burlingto
 </section>
 
 <section class="invite">
-  <figure class="invite-media">{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
+  <figure class="invite-media" data-dark>{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
   <div class="invite-txt">
     <p class="invite-beat">or the porch you come home to,</p>
     <h2>we paint with purpose.</h2>
@@ -167,6 +162,10 @@ page('index.html', 'Painting With Purpose · House painters in Greater Burlingto
 
 
 # ---------------------------------------------------------------- work: a quiet index, photos appear on hover
+def POSATTR(fn):
+    return f' style="object-position:{POS[LEAD[fn]]}"' if LEAD[fn] in POS else ''
+
+
 def peek_src(fn):
     md = LEAD[fn].replace('.jpg', '-md.jpg')
     return md if os.path.exists(md) else LEAD[fn]
@@ -174,6 +173,7 @@ def peek_src(fn):
 
 rows = ''.join(
     f'<li><a class="prow" href="{fn}" data-peek="{peek_src(fn)}">'
+    f'<img class="prow-img" src="{peek_src(fn)}" alt="" loading="lazy" decoding="async"{POSATTR(fn)}>'
     f'<span class="n">{i:02d}</span><span class="t">{P[fn]["title"]}</span><span class="k">{P[fn]["kind"].split(" · ")[-1]}</span><span class="l">{P[fn]["loc"]}</span></a></li>'
     for i, fn in enumerate(ORDER, 1))
 page('work.html', 'Work · Painting With Purpose', 'Homes, halls and storefronts painted by Painting With Purpose across Greater Burlington.',
@@ -182,8 +182,7 @@ page('work.html', 'Work · Painting With Purpose', 'Homes, halls and storefronts
   <h1>Homes, halls and storefronts.</h1>
 </section>
 <section class="pindex"><ul>{rows}</ul></section>
-<div class="peek" aria-hidden="true"><img alt=""></div>
-{ending()}''', 'work.html')
+<div class="peek" aria-hidden="true"><img alt=""></div>''', 'work.html')
 
 # ---------------------------------------------------------------- project pages: one photograph, then words
 for i, fn in enumerate(ORDER):
@@ -192,6 +191,7 @@ for i, fn in enumerate(ORDER):
     nxt = ORDER[(i + 1) % len(ORDER)]
     slot = LEAD[fn].split('/')[-1].replace('-wide.jpg', '') if LEAD[fn].startswith('assets/hero/') else None
     hero = hero_media(slot, plain(d['title']), eager=True, clip=slot != 'sigma') if slot else img(LEAD[fn], plain(d['title']), eager=True)
+    more = f'<figure class="pj-more">{img(MORE[fn], plain(d["title"]) + ", detail", sizes="(max-width: 760px) 100vw, 70vw")}</figure>\n' if fn in MORE else ''
     body = f'''<section class="pj-hero">{hero}</section>
 <section class="pj-head">
   <p class="eyebrow">{d['kind']}</p>
@@ -202,7 +202,7 @@ for i, fn in enumerate(ORDER):
   <div class="pj-text">{''.join(f'<p>{t}</p>' for t in d['text'])}</div>
   <div class="pj-side"><dl class="credits">{facts}</dl><p class="eyebrow">Palette</p><div class="palette">{d['palette']}</div></div>
 </section>
-<section class="pj-next"><p class="eyebrow">Next project</p><a href="{nxt}">{P[nxt]['title']} <span>→</span></a></section>'''
+{more}<section class="pj-next"><p class="eyebrow">Next project</p><a href="{nxt}">{P[nxt]['title']} <span>→</span></a></section>'''
     page(fn, f'{plain(d["title"])} · Painting With Purpose', plain(d['lede']), body, 'work.html', og=LEAD[fn])
 
 # ---------------------------------------------------------------- services: words only
@@ -218,6 +218,7 @@ page('services.html', 'Services · Painting With Purpose',
   <p class="eyebrow">Services</p>
   <h1>Five services, one standard.</h1>
 </section>
+<figure class="page-photo">{img('assets/img/pwp-0631-painter.jpg', 'A painter on a ladder at a red shingle colonial', eager=True)}</figure>
 <section class="svc"><ul>{svc_rows}</ul></section>
 <section class="steps">
   <p class="eyebrow">How a job runs</p>
@@ -228,8 +229,7 @@ page('services.html', 'Services · Painting With Purpose',
     <li><h3>Final walkthrough</h3><p>We go over the finished job with you before we call it done.</p></li>
   </ol>
   <p class="area">Addison, Chittenden, Franklin, Grand Isle, Lamoille, Orange and Washington counties.</p>
-</section>
-{ending()}''', 'services.html')
+</section>''', 'services.html')
 
 # ---------------------------------------------------------------- purpose: words only
 page('purpose.html', 'Purpose · Painting With Purpose',
@@ -238,6 +238,7 @@ page('purpose.html', 'Purpose · Painting With Purpose',
   <p class="eyebrow">Purpose</p>
   <h1>We paint to help end homelessness in Vermont.</h1>
 </section>
+<figure class="page-photo">{img('assets/img/pwp-1247.jpg', 'The Painting With Purpose booth at a street fair in a Vermont town', eager=True)}</figure>
 <section class="prose">
   <p class="big">Homelessness touches the whole community, and the answers are few. We wanted our work to be one of them.</p>
   <p>Part of the profit from every job goes to CVOEO, the Champlain Valley Office of Economic Opportunity. It helps people in shelters move into permanent housing by covering security deposits, a first month’s rent and utilities. So far that is more than $15,000, and more than a dozen people in secure homes. It adds nothing to your price.</p>
@@ -247,8 +248,7 @@ page('purpose.html', 'Purpose · Painting With Purpose',
 <section class="quote">
   <blockquote>“Their mission for giving back to the homeless community is truly amazing.”</blockquote>
   <p class="eyebrow">Pam Mathe · Google review</p>
-</section>
-{ending()}''', 'purpose.html')
+</section>''', 'purpose.html')
 
 # ---------------------------------------------------------------- careers
 FORMOK = '<p class="form-ok" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>'
@@ -265,6 +265,7 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greate
     <li>Room to grow into a lead role</li>
   </ul>
 </section>
+<figure class="page-photo">{img('assets/img/crew-three.jpg', 'Three Painting With Purpose painters on a job, with ladders and drop cloths', eager=True)}</figure>
 <section class="roles">
   <ul><li><a href="#apply"><span class="t">Painter</span><span class="k">Full-time · Greater Burlington</span><span class="go">Apply →</span></a></li></ul>
 </section>
@@ -292,7 +293,7 @@ page('contact.html', 'Free estimate · Painting With Purpose', 'Tell us about yo
     <p class="eyebrow">Free estimate</p>
     <h1>Tell us about your project.</h1>
     <p class="lede">Call or text <a class="tlink" href="tel:{TEL}">802-PAINTER</a>, email <a class="tlink" href="mailto:{EMAIL}">{EMAIL}</a>, or use the form. We work across Chittenden County and the counties around it.</p>
-    <p class="addr">133 Elm Street, Office B, Winooski · 8:00 to 5:00 daily</p>
+    <p class="addr">133 Elm Street, Office B, Winooski · 8:00 to 5:00 daily · <a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></p>
     <form class="form" data-form novalidate>
       <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
       <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
@@ -321,7 +322,9 @@ def ba_frame(t):
   </div>'''
 
 
-tiles = ''.join(f'<figure class="ba">{ba_frame(t)}<figcaption><span>{t["title"]}</span><span>{t["note"]}</span></figcaption></figure>' for t in TF)
+FIRST = ['ext-07', 'ext-04', 'deck-04', 'int-02', 'com-02', 'ext-06', 'deck-02', 'ext-01', 'int-04']
+TFO = [t for i in FIRST for t in TF if t['id'] == i] + [t for t in TF if t['id'] not in FIRST]
+tiles = ''.join(f'<figure class="ba"{" data-more hidden" if k >= len(FIRST) else ""}>{ba_frame(t)}<figcaption><span>{t["title"]}</span><span>{t["note"]}</span></figcaption></figure>' for k, t in enumerate(TFO))
 page('transformations.html', 'Before & after · Painting With Purpose', 'The first day and the last day of twenty Vermont painting projects.',
      f'''<section class="phead">
   <p class="eyebrow">Before &amp; after</p>
@@ -329,5 +332,5 @@ page('transformations.html', 'Before & after · Painting With Purpose', 'The fir
   <p class="lede">Drag across any photo to compare the first day with the last.</p>
 </section>
 <section class="ba-grid">{tiles}</section>
-{ending()}''', 'transformations.html')
+<p class="ba-all"><button class="tlink" type="button" data-show-more>Show all {len(TF)}</button></p>''', 'transformations.html')
 print('built')
