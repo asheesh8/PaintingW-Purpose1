@@ -23,7 +23,7 @@
   $$('.menu a').forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
 
   /* photographs fade in once loaded */
-  $$('main img').forEach(function (im) {
+  $$('main img:not(.wc)').forEach(function (im) {
     var show = function () { im.classList.add('in'); };
     if (im.complete && im.naturalWidth) show();
     else { im.addEventListener('load', show); im.addEventListener('error', show); }
