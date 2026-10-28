@@ -55,6 +55,15 @@ def img(src, alt, sizes='100vw', eager=False, cls=''):
     return f'<img{c} src="{src}"{srcset} alt="{alt}" {load} decoding="async"{pos}>'
 
 
+WC = {'mountains': (364, 286), 'church': (429, 222), 'leaves': (231, 220), 'brush': (133, 207), 'can': (183, 208), 'ladder': (158, 222)}
+
+
+def wc(name):
+    """A small Vermont watercolour, used sparingly as an accent on cream (never over photos)."""
+    w, h = WC[name]
+    return f'<img class="wc wc-{name}" src="assets/wc/{name}.webp" alt="" aria-hidden="true" width="{w}" height="{h}" loading="lazy" decoding="async">'
+
+
 def hero_media(name, alt, eager=False, tall_only=False, clip=True):
     """One of the four hero photographs: a wide still with a tall crop for phones, plus its silent clip when it exists
     (each clip is used once on the site: Sigma on home, Victorian and Library on their project pages, Porch on contact)."""
@@ -115,7 +124,7 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
 {body}
 </main>
 <footer class="ftr">
-  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p></div>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p>{wc("mountains")}</div>
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></li><li class="mute">{ADDRESS}</li></ul>
   <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
@@ -155,6 +164,7 @@ page('index.html', 'Painting With Purpose · House painters in Greater Burlingto
       <li><h2>Older houses</h2><p>EPA lead certified.</p></li>
     </ul>
     <p><a class="tlink" href="services.html">All services</a></p>
+    {wc('leaves')}
   </div>
 </section>
 
@@ -189,6 +199,7 @@ page('work.html', 'Work · Painting With Purpose', 'Homes, halls and storefronts
      f'''<section class="phead">
   <p class="eyebrow">Work</p>
   <h1>Homes, halls and storefronts.</h1>
+  {wc('brush')}
 </section>
 <section class="pindex"><ul>{rows}</ul></section>
 <div class="peek" aria-hidden="true"><img alt=""></div>''', 'work.html')
@@ -231,6 +242,7 @@ page('services.html', 'Services · Painting With Purpose',
 <section class="svc"><ul>{svc_rows}</ul></section>
 <section class="steps">
   <p class="eyebrow">How a job runs</p>
+  {wc('can')}
   <ol>
     <li><h3>Walkthrough</h3><p>We visit, measure and talk through colors, surfaces and repairs.</p></li>
     <li><h3>Written estimate</h3><p>Scope, schedule and price, in writing and free.</p></li>
@@ -254,6 +266,7 @@ page('purpose.html', 'Purpose · Painting With Purpose',
   <p>Zach and Gabe Dunn started Painting With Purpose in 2022 to show that a painting company could be very good at the work and good for the place it works. The business plan took first place at the Joy and Jerry Meyers Cup at UVM. More than a hundred jobs later, the idea is the same.</p>
   <p><a class="tlink" href="https://www.cvoeo.org/" target="_blank" rel="noopener">About CVOEO ↗</a></p>
 </section>
+<figure class="wc-band">{wc('church')}</figure>
 <section class="quote">
   <blockquote>“Their mission for giving back to the homeless community is truly amazing.”</blockquote>
   <p class="eyebrow">Pam Mathe · Google review</p>
@@ -265,6 +278,7 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greate
      f'''<section class="phead">
   <p class="eyebrow">Careers</p>
   <h1>Paint with us.</h1>
+  {wc('ladder')}
   <p class="lede">We hire people who show up, care about the details and treat every home like their own. Experience helps. We teach the rest.</p>
   <ul class="perks">
     <li>$18 to $30 an hour, based on experience</li>

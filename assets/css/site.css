@@ -265,6 +265,16 @@ body.menu-open { overflow: hidden; }
 .ftr-bot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; margin-top: clamp(40px, 5vw, 72px); padding-top: 18px; border-top: 1px solid var(--line); color: var(--mute); font-size: 13px; }
 
 
+/* ---------- watercolours: a few small Vermont pieces on cream, never over photographs ---------- */
+.wc { display: block; height: auto; pointer-events: none; user-select: none; }
+.phead, .steps, .inside-items { position: relative; }
+.phead .wc { position: absolute; right: var(--g); bottom: clamp(40px, 6vw, 88px); width: clamp(84px, 9vw, 132px); }
+.wc-leaves { width: clamp(96px, 9vw, 140px); margin-top: 8px; transform: rotate(-6deg); }
+.steps .wc-can { position: absolute; right: var(--g); top: calc(var(--sec) - 36px); width: clamp(80px, 8vw, 116px); }
+.wc-band { display: grid; justify-items: center; padding: clamp(56px, 7vw, 96px) var(--g) 0; }
+.wc-band .wc { width: min(380px, 80vw); }
+.ftr-brand .wc-mountains { width: 150px; margin-top: 18px; }
+
 /* ---------- tablet ---------- */
 @media (max-width: 1024px) {
   /* bigger tap targets for fingers */
@@ -290,6 +300,9 @@ body.menu-open { overflow: hidden; }
   .hide-s { display: none; }
   .menu { grid-template-columns: 1fr; align-content: start; }
   .cap { bottom: 24px; }
+  .phead .wc { width: 72px; bottom: auto; top: clamp(80px, 12vw, 180px); }
+  .steps .wc-can { width: 64px; top: calc(var(--sec) - 20px); }
+  .ftr-brand .wc-mountains { width: 120px; }
     /* step inside: photo with its line, then the three services, compact */
   .inside { display: block; height: auto; min-height: 0; }
   .inside-media { height: 72svh; }
