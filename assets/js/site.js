@@ -34,7 +34,7 @@
   function onScroll() {
     ticking = false;
     body.classList.toggle('scrolled', window.scrollY > 40);
-    var h = 40, w = window.innerWidth;
+    var h = 40, w = document.documentElement.clientWidth; /* not innerWidth, which counts a classic (Windows) scrollbar */
     body.classList.toggle('ondark', darks.some(function (el) {
       var r = el.getBoundingClientRect();
       return r.top <= 1 && r.bottom > h && r.left <= 1 && r.right >= w - 1;
@@ -73,6 +73,16 @@
       }, { rootMargin: '200px 0px' });
       clips.forEach(function (v) { vo.observe(v); });
     } else clips.forEach(start);
+  }
+
+  /* home hero: the walkthrough loop behind the logo; phones get the tall cut, smaller screens the 720p one */
+  var loop = $('.hero-loop');
+  if (loop && !still) {
+    var tallScreen = window.matchMedia('(max-aspect-ratio: 4/5)').matches;
+    loop.src = tallScreen ? loop.dataset.srcTall : window.innerWidth < 1100 ? loop.dataset.srcSm : loop.dataset.src;
+    loop.addEventListener('playing', function () { loop.classList.add('ready'); });
+    var go = loop.play();
+    if (go && go.catch) go.catch(function () {});
   }
 
   /* work index: a small photo follows the pointer over each row (pointer devices only) */

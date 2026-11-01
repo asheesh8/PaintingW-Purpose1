@@ -77,9 +77,17 @@ body.menu-open { overflow: hidden; }
 /* ---------- home 1: arrive (Sigma Phi) ---------- */
 .h1-screen { position: relative; height: 100svh; min-height: 560px; overflow: hidden; color: #fff; background: #2b2a28; }
 .h1-media, .h1-media picture, .h1-media img, .h1-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.h1-media img { animation: dolly 6s var(--ease) both; }
-@keyframes dolly { from { transform: scale(1.1); } to { transform: scale(1); } }
-.h1-screen::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 70% at 0% 100%, rgba(10, 14, 16, .7), rgba(10, 14, 16, 0) 75%), linear-gradient(180deg, rgba(10, 14, 16, .45) 0, rgba(10, 14, 16, 0) 20%, rgba(10, 14, 16, 0) 45%, rgba(10, 14, 16, .68) 100%); pointer-events: none; }
+/* the walkthrough loop (already soft-blurred in the file) fades in over its first frame */
+.h1-media { z-index: 0; }
+.h1-media .hero-loop { opacity: 0; transition: opacity 1.2s var(--ease); }
+.h1-media .hero-loop.ready { opacity: 1; }
+.h1-screen::after { content: ""; position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10, 14, 16, .38), rgba(10, 14, 16, .18) 100%), linear-gradient(180deg, rgba(10, 14, 16, .35) 0, rgba(10, 14, 16, 0) 22%, rgba(10, 14, 16, 0) 70%, rgba(10, 14, 16, .4) 100%); pointer-events: none; }
+/* the logo, big and centered over the loop */
+.h1-logo { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: var(--hdr) var(--g) 0; margin: 0; }
+.h1-logo img { width: min(72vw, 720px); height: auto; filter: drop-shadow(0 2px 30px rgba(10, 14, 16, .4)); animation: rise 1.2s .15s var(--ease) both; }
+/* the header's small logo stays out of the way until you scroll past the big one */
+.logo { transition: opacity .4s var(--ease); }
+.over:not(.scrolled):not(.menu-open) .logo { opacity: 0; pointer-events: none; }
 .h1-in { position: absolute; left: var(--g); right: var(--g); bottom: clamp(32px, 6vw, 72px); z-index: 2; }
 .sr { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 /* a small caption on each home photo: the job, and where it is */
@@ -426,6 +434,7 @@ body.menu-open { overflow: hidden; }
   .inside-beat { left: var(--g); right: var(--g); bottom: 28px; }
   .inside-media::after { background: linear-gradient(180deg, rgba(10, 14, 16, 0) 35%, rgba(10, 14, 16, .72)); }
   .h1-in { bottom: 76px; }
+  .h1-logo img { width: 84vw; }
   .reveal-beat { bottom: 76px; }
   .reveal-pin::after { background: linear-gradient(180deg, rgba(10, 14, 16, .25) 0, rgba(10, 14, 16, 0) 22%, rgba(10, 14, 16, 0) 40%, rgba(10, 14, 16, .72)); }
   :root { --hdr: 64px; }

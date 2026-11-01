@@ -2,6 +2,9 @@
 
 Minimal, photo-led static site (no build step needed to deploy). In the spirit of foundry-house.com and birdseyevt.com: four photographs carry the whole home page, and the feeling comes from moving through it rather than from more pictures. Type is Instrument Serif (upright only) + Geist; navy `#105677` and sky `#68ABE4` come from the logo.
 
+## Home hero
+The big white logo (`assets/logo-hero.webp`, AI-upscaled from the 360px logo, then made transparent) sits centered over a soft-blurred loop of three slow walkthroughs: Sigma Phi, the library and the Victorian (`assets/hero/hero-loop-1080.mp4`, `-720.mp4` under 1100px wide, `-tall.mp4` on tall phone screens, with `hero-poster*.jpg` shown until it plays). The clips were made in Higgsfield (Kling 3.0, 4K), stabilized, then crossfaded into a seamless loop with `tools/make_hero_loop.sh`; the raw 4K clips are kept outside the repo.
+
 ## The four heroes
 | Slot | Photo | Motion |
 | --- | --- | --- |
