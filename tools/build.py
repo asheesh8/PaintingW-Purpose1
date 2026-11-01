@@ -14,13 +14,19 @@ then rerun this script. Until a clip exists the still is shown.
 import html
 import json
 import os
+import re
 
-P = json.load(open('tools/projects.json'))
-TF = json.load(open('tools/transformations.json'))
+P = json.load(open('tools/projects.json', encoding='utf-8'))
+TF = json.load(open('tools/transformations.json', encoding='utf-8'))
 
 PHONE, TEL, EMAIL = '802-724-6837', '+18027246837', 'office@pwpvt.com'
 ADDRESS = '133 Elm Street, Office B, Winooski, Vermont'
+AREA = 'Vermont, eastern New York and western New Hampshire'
+HOURS = [('Monday', '7:30 to 4:00'), ('Tuesday to Friday', '8:00 to 4:00'), ('Saturday and Sunday', 'Closed')]
 IG, FB = 'https://www.instagram.com/paintingwithpurposevt/', 'https://www.facebook.com/PaintingWithPurposeVT'
+# still to come from the client; each link appears once its URL is filled in
+LINKEDIN, FPF, INDEED = '', '', ''
+SOCIALS = [(n, u) for n, u in (('Instagram', IG), ('Facebook', FB), ('LinkedIn', LINKEDIN), ('Front Porch Forum', FPF)) if u]
 
 MENU = [('index.html', 'Home'), ('work.html', 'Work'), ('transformations.html', 'Before & after'), ('services.html', 'Services'),
         ('purpose.html', 'Purpose'), ('careers.html', 'Careers'), ('contact.html', 'Contact')]
@@ -112,7 +118,7 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body{' class="over"' if over else ''}>
@@ -123,64 +129,156 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
 </header>
 <div class="menu" id="menu" hidden>
   <ul class="menu-l">{menu}</ul>
-  <div class="menu-r"><p>Greater Burlington, Vermont</p><p><a href="tel:{TEL}">802-PAINTER · {PHONE}</a><br><a href="mailto:{EMAIL}">{EMAIL}</a></p><p><a href="{IG}" target="_blank" rel="noopener">Instagram</a> · <a href="{FB}" target="_blank" rel="noopener">Facebook</a></p></div>
+  <div class="menu-r"><p>Born in Vermont. Serving {AREA}.</p><p><a href="tel:{TEL}">802-PAINTER · {PHONE}</a><br><a href="mailto:{EMAIL}">{EMAIL}</a></p><p>{" · ".join(f'<a href="{u}" target="_blank" rel="noopener">{n}</a>' for n, u in SOCIALS)}</p></div>
 </div>
 <main id="main">
 {body}
 </main>
 <footer class="ftr">
-  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p>{wc("mountains")}</div>
-  <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li><a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></li><li class="mute">{ADDRESS}</li></ul>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont.</p><p class="mute">Serving {AREA}.</p>{wc("mountains")}</div>
+  <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li class="mute">{ADDRESS}</li>{"".join(f'<li class="mute">{d} · {h}</li>' for d, h in HOURS)}</ul>
   <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+  <ul class="ftr-social" aria-label="Follow us">{"".join(f'<li><a href="{u}" target="_blank" rel="noopener">{n}</a></li>' for n, u in SOCIALS)}</ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
 <script src="assets/js/site.js"></script>
 </body>
 </html>
 '''
-    open(fn, 'w').write(doc)
+    open(fn, 'w', encoding='utf-8').write(doc)
 
 
-# ---------------------------------------------------------------- home: four screens
-page('index.html', 'Painting With Purpose · House painters in Greater Burlington, Vermont',
-     'Residential and commercial painting in Greater Burlington, Vermont. Part of every job helps end homelessness in Vermont.',
+# ---------------------------------------------------------------- home
+CTA = 'Request your free consultation today'
+
+# what each kind of job includes, from the client's own checklists
+COMMERCIAL_LIST = ['Material and equipment procurement', 'RRP lead-safe practices and documentation', 'Ground, driveway and roof protection',
+                   'Rot repair', 'Epoxy repair', 'Carpentry improvements', 'Scraping', 'Sanding', 'Encapsulation', 'Oil priming',
+                   'Standard priming', 'Dusting', 'Caulking', 'Wood filling', 'Moisture content testing', 'Masking', 'Spot priming',
+                   'Glazing', 'Liquid masking', 'Demasking', 'Staining', 'Painting', 'Pressure washing', 'Window washing', 'Soft washing',
+                   'Containment building', 'Touch-up painting', 'Block filling', 'Job site organization and cleanup']
+RESIDENTIAL_LIST = ['Material and equipment procurement', 'Floor protection', 'Furniture moving and protection', 'Popcorn ceiling removal',
+                    'Popcorn ceiling texture application', 'Drywall repair', 'Plaster repair', 'Spackle patching', 'Hand sanding',
+                    'Festool HEPA vacuum sanding', 'Pole sanding', 'Drywall sanding, walls and ceilings', 'Dusting', 'Caulking', 'Caulk removal',
+                    'Masking', 'Oil priming', 'Standard priming', 'Shellac priming', 'Painting', 'Spray painting', 'Cabinet refinishing',
+                    'Lime washing', 'Staining', 'Clear coating', 'Demasking', 'Containment building', 'Job site organization and cleanup']
+
+
+def checklist(items):
+    return ''.join(f'<li>{html.escape(t)}</li>' for t in items)
+
+
+SIDES = [('com', 'Commercial', 'Exterior painting &amp; staining', 'assets/img/pwp-1335.jpg', 'An auto dealership entrance under a freshly painted red and white canopy', COMMERCIAL_LIST),
+         ('res', 'Residential', 'Interior painting &amp; staining', 'assets/img/pwp-1094.jpg', 'A slate-blue built-in bookcase and wainscot in a living room', RESIDENTIAL_LIST)]
+split = ''.join(f'''<article class="side side-{k}">
+    {img(src, alt, sizes='(max-width: 760px) 100vw, 64vw')}
+    <div class="side-in">
+      <p class="eyebrow">{who}</p>
+      <h2>{what}</h2>
+      <button class="side-btn" type="button" aria-expanded="false" aria-controls="incl-{k}">What’s included</button>
+      <ul class="side-list" id="incl-{k}">{checklist(items)}</ul>
+    </div>
+  </article>''' for k, who, what, src, alt, items in SIDES)
+
+EXPERIENCE = [('Exceptional quality', 'We always inspect our work to ensure our standards and your standards are aligned and met.'),
+              ('Trust and respect', 'We treat you and your home with respect and care, as if it were our own. We show up on time and keep our promise to work safely, with precision and quality, every day and with a great attitude.'),
+              ('Zero cleanup stress', 'No dust, no tools and no mess. We clean up every day that we’re on the job to ensure your safety and ease of living.'),
+              ('Effective communication', 'We are with you every step of the way. We listen to your needs and make sure any change to the project is communicated with you directly, first.')]
+
+# Google reviews, as shown on the client's previous site
+REVIEWS = [('The BEST experience we’ve ever had with painters: they were communicative and immediately responsive throughout, they showed up ON TIME with all the equipment, paint, etc., they were clean and tidy, they did the job expertly and within the time frame they estimated, and they were respectful to us and to each other. LOVE THEM!', 'Barbara Boutsikaris'),
+           ('Professional is not a large enough word to describe PWP’s craftsmanship and commitment with my recent house painting project. Matt and Josh knew what they were doing, methodically and meticulously got it done, and the results are fantastic!', 'Pat Waterman'),
+           ('This house is a Victorian and had deferred maintenance. We are so happy to see it restored. My dad even loved them and he’s not easy to please! Highly recommend this skilled, high tech, high energy, “get it done” painting company.', 'K Raz'),
+           ('Our 16 year old kitchen cabinets were very worn and look like new again! You won’t be disappointed… highly recommend them!', 'Lara Militello'),
+           ('They helped me fix a crack from a previous painting company and made it look incredibly amazing. They painted shelves and baseboards with precision. Their mission for giving back to the homeless community is truly amazing.', 'Pam Mathe')]
+
+CERTS = [('Certified', ['EPA RRP Certified Firm', 'OSHA 10 compliant', 'Registered Vermont contractor', 'Respirator fit testing',
+                        'Google certified', 'BBB accredited']),
+         ('Insured and in good standing', ['Commercial general liability and workmanship policy', 'Workers’ compensation policy', 'Umbrella policy',
+                                           'Commercial and non-owned auto policy', 'In good standing with the Vermont Secretary of State',
+                                           'D-U-N-S Number (Dun &amp; Bradstreet)', 'EMR rating', '700 Business Vantage credit score (Oct. 1, 2026)',
+                                           '100% commercial contractor pre-qualification record', 'We never sell your data']),
+         ('Recognized', ['Meyers Cup grand prize champions, 2024', 'UVM business pitch competition grand prize winners, 2023',
+                         'Catamount Innovation Fund selection, 2022–2023'])]
+
+
+def where(fn, place, note):
+    """Small caption on each home photo: which job it is and where."""
+    return f'<a class="where" href="{fn}"><span class="where-t">{P[fn]["title"]}</span><span class="where-l">{place} · {note}</span></a>'
+
+
+page('index.html', 'Painting With Purpose · A painting company born in Vermont',
+     f'Residential and commercial painting, staining, sheetrock and IRC compliance inspections across {AREA}.',
      f'''<section class="h1-screen" data-dark>
   <div class="h1-media">{hero_media('sigma', 'Sigma Phi House in Burlington, white Corinthian columns against red brick', eager=True)}</div>
-  <div class="h1-in"><h1 class="sr">Painting With Purpose: house and commercial painters in Greater Burlington, Vermont</h1><p class="beat" aria-hidden="true">Whether it’s a frat house on the hill,</p></div>
-  <a class="cap" href="project-sigma-phi-house.html">Sigma Phi House · Burlington →</a>
+  <div class="h1-in"><h1 class="sr">Painting With Purpose: a painting company born in Vermont</h1>{where('project-sigma-phi-house.html', 'Burlington, Vermont', 'Columns, pediment and entry')}</div>
   <span class="h1-cue" aria-hidden="true"></span>
+</section>
+
+<section class="intro">
+  <h2>A painting company born in Vermont.</h2>
+  <p class="lede">Painting With Purpose is a professional painting company serving the entire state of Vermont, eastern New York and western New Hampshire. We are known for our precise work and our commitment to enriching our communities through charitable causes that matter to Vermonters.</p>
+  {wc('leaves')}
+</section>
+
+<section class="split" data-dark aria-label="Commercial and residential">
+  {split}
 </section>
 
 <section class="reveal" data-dark>
   <div class="reveal-pin">
     <figure class="reveal-fig">{hero_media('victorian', 'A restored Queen Anne Victorian with layered white porches', clip=False)}</figure>
-    <p class="beat reveal-beat" aria-hidden="true">a Victorian on a quiet street,</p>
-    <a class="cap" href="project-queen-anne-victorian.html">Queen Anne Victorian · Burlington →</a>
+    <div class="reveal-beat">{where('project-queen-anne-victorian.html', 'Burlington, Vermont', 'Full exterior restoration')}</div>
   </div>
 </section>
 
 <section class="inside">
-  <div class="inside-media" data-dark>{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<p class="beat inside-beat" aria-hidden="true">a library in the middle of town,</p></div>
+  <div class="inside-media" data-dark>{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<div class="inside-beat">{where('project-library.html', 'Greater Burlington', 'Full interior')}</div></div>
   <div class="inside-items">
-    <p class="eyebrow">What we paint</p>
+    <p class="eyebrow">What we do</p>
     <ul class="inside-list">
-      <li><h2>Homes</h2><p>Interiors, exteriors, cabinets and trim.</p></li>
-      <li><h2>Commercial</h2><p>Phased around your hours.</p></li>
-      <li><h2>Older houses</h2><p>EPA lead certified.</p></li>
+      <li><h2>Painting</h2><p>Homes and commercial buildings, inside and out.</p></li>
+      <li><h2>Staining</h2><p>Decks, porches and verandas.</p></li>
+      <li><h2>Sheetrock</h2><p>Hanging, taping and repairs.</p></li>
+      <li><h2>Inspections</h2><p>IRC compliance, from an EPA RRP certified firm.</p></li>
     </ul>
     <p><a class="tlink" href="services.html">All services</a></p>
-    {wc('leaves')}
   </div>
+</section>
+
+<section class="why">
+  <h2>Why choose Painting With Purpose?</h2>
+  <div class="why-txt">
+    <p class="big">Finding an available painting company that lives up to your high quality standards can be difficult.</p>
+    <p>You want experienced painters, budget-friendly pricing and top quality results. Painting With Purpose is here to fill all of your needs.</p>
+    <p>Everybody on our planet seeks a purpose. Here at Painting With Purpose, there’s purpose behind every brush stroke. We design intentional scopes of work and perform every task, from beginning to end, at the highest level.</p>
+    <p>1% of your base contract value goes towards the charity of your choosing after a successful closing. Painting With Purpose believes in enriching the community it has sprouted and grown from. We pledge to stick to our Vermont roots, where people help people.</p>
+    <p class="why-end">Be a part of continued mission success by hiring the <em class="it">painters with a purpose</em>.</p>
+  </div>
+</section>
+
+<section class="certs">
+  <p class="eyebrow">Certifications &amp; accreditations</p>
+  <div class="certs-grid">{"".join(f'<div><h3>{h}</h3><ul>{"".join(f"<li>{c}</li>" for c in cs)}</ul></div>' for h, cs in CERTS)}</div>
+</section>
+
+<section class="exp">
+  <p class="eyebrow">The PWP experience</p>
+  <ol>{"".join(f'<li><h3>{h}</h3><p>{t}</p></li>' for h, t in EXPERIENCE)}</ol>
+</section>
+
+<section class="reviews">
+  <div class="reviews-head"><h2>Enough of what we have to say.</h2><p class="lede">Hear from our best-in-class clientele.</p></div>
+  <ul class="reviews-list">{"".join(f'<li><blockquote>“{q}”</blockquote><p><span>{n}</span><span class="mute">Google review</span></p></li>' for q, n in REVIEWS)}</ul>
 </section>
 
 <section class="invite">
   <figure class="invite-media" data-dark>{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
   <div class="invite-txt">
-    <p class="invite-beat">or the porch you come home to,</p>
-    <h2>we paint with purpose.</h2>
-    <p>A Greater Burlington painting company. Careful prep, a clean site at the end of every day, and a free written estimate.</p>
-    <p class="invite-links"><a class="tlink" href="contact.html">Request an estimate</a><a href="tel:{TEL}">802-PAINTER</a></p>
-    <p class="invite-give">Part of every job goes to CVOEO to help Vermonters move from shelter into a home. More than $15,000 so far. <a class="tlink" href="purpose.html">Our purpose</a></p>
+    <p class="invite-beat"><a href="project-built-ins-and-porch.html">Built-ins &amp; Porch · Greater Burlington</a></p>
+    <h2>{CTA}.</h2>
+    <p>Careful prep, a clean site at the end of every day, and a written proposal for your project.</p>
+    <p class="invite-links"><a class="tlink" href="contact.html">Request a proposal</a><a href="tel:{TEL}">802-PAINTER</a></p>
   </div>
 </section>''', over=True)
 
@@ -195,8 +293,14 @@ def peek_src(fn):
     return md if os.path.exists(md) else LEAD[fn]
 
 
+def palette_attr(fn):
+    """The job's paint colors as name:hex pairs, shown under the photo that follows the cursor."""
+    sw = re.findall(r'background:(#[0-9A-Fa-f]{6})"></i><span>([^<]+)</span>', P[fn]['palette'])
+    return '|'.join(f'{n}:{c}' for c, n in sw)
+
+
 rows = ''.join(
-    f'<li><a class="prow" href="{fn}" data-peek="{peek_src(fn)}">'
+    f'<li><a class="prow" href="{fn}" data-peek="{peek_src(fn)}" data-palette="{palette_attr(fn)}">'
     f'<img class="prow-img" src="{peek_src(fn)}" alt="" loading="lazy" decoding="async"{POSATTR(fn)}>'
     f'<span class="n">{i:02d}</span><span class="t">{P[fn]["title"]}</span><span class="k">{P[fn]["kind"].split(" · ")[-1]}</span><span class="l">{P[fn]["loc"]}</span></a></li>'
     for i, fn in enumerate(ORDER, 1))
@@ -207,9 +311,14 @@ page('work.html', 'Work · Painting With Purpose', 'Homes, halls and storefronts
   {wc('brush')}
 </section>
 <section class="pindex"><ul>{rows}</ul></section>
-<div class="peek" aria-hidden="true"><img alt=""></div>''', 'work.html')
+<div class="peek" aria-hidden="true"><img alt=""><div class="peek-pal"></div></div>''', 'work.html')
 
 # ---------------------------------------------------------------- project pages: one photograph, then words
+def story(d):
+    """The story behind the job, from the client: add a "story" list of paragraphs to the project in tools/projects.json."""
+    return f'<div class="pj-story"><p class="eyebrow">The story</p>{"".join(f"<p>{t}</p>" for t in d["story"])}</div>' if d.get('story') else ''
+
+
 for i, fn in enumerate(ORDER):
     d = P[fn]
     facts = d['facts'].replace('<dt>', '<div><dt>').replace('</dd>', '</dd></div>') + '<div><dt>Photography</dt><dd>Gabe Dunn</dd></div>'
@@ -224,37 +333,65 @@ for i, fn in enumerate(ORDER):
   <p class="big">{d['lede']}</p>
 </section>
 <section class="pj-body">
-  <div class="pj-text">{''.join(f'<p>{t}</p>' for t in d['text'])}</div>
+  <div class="pj-text">{''.join(f'<p>{t}</p>' for t in d['text'])}{story(d)}</div>
   <div class="pj-side"><dl class="credits">{facts}</dl><p class="eyebrow">Palette</p><div class="palette">{d['palette']}</div></div>
 </section>
 {more}<section class="pj-next"><p class="eyebrow">Next project</p><a href="{nxt}">{P[nxt]['title']} <span>→</span></a></section>'''
     page(fn, f'{plain(d["title"])} · Painting With Purpose', plain(d['lede']), body, 'work.html', og=LEAD[fn])
 
 # ---------------------------------------------------------------- services: words only
-SV = [('residential', 'Residential painting', 'Interiors and exteriors, from one room to a whole house. Siding, trim, doors, cabinets and porches, with rot repair when the wood needs it first.'),
-      ('commercial', 'Commercial painting', 'Offices, storefronts, multi-unit and public buildings, inside and out. Phased around your hours, with crews experienced on lifts.'),
-      ('decks', 'Decks & porches', 'Washing, sanding, repair and stain or paint for wood, composite and metal decks.'),
-      ('lead', 'EMP lead inspections', 'Essential Maintenance Practices inspections for owners and property managers. We are EPA lead certified, so older homes are handled safely from the first scrape.'),
-      ('gutters', 'Gutter cleaning', 'Spring and fall cleanouts, so water keeps moving through a Vermont winter.')]
-svc_rows = ''.join(f'<li id="{k}"><span class="n">{i:02d}</span><h2>{html.escape(n)}</h2><p>{t}</p></li>' for i, (k, n, t) in enumerate(SV, 1))
+# (anchor, name, line under it, photo, alt, what "Learn more" opens: a checklist or a sentence)
+SV = [('residential', 'Residential painting', 'We’ll restore the beauty of your home and protect it for many years to come.',
+       'assets/img/pwp-0058.jpg', 'A restored Queen Anne Victorian with white porches', ('Interior painting &amp; staining', RESIDENTIAL_LIST)),
+      ('commercial', 'Commercial painting', 'High quality painting for the interior and exterior of your commercial property.',
+       'assets/img/pwp-0995.jpg', 'A library atrium with timber ceilings and fresh white walls', ('Exterior painting &amp; staining', COMMERCIAL_LIST)),
+      ('staining', 'Staining & maintenance', 'Let our team give new life to your deck, porch, or veranda.',
+       'assets/ba/deck-01-after.jpg', 'A back deck after washing and a solid stain',
+       'Washing, sanding and repair first, then stain or paint for wood, composite and metal decks, porches and verandas.'),
+      ('irc', 'IRC compliance inspections', 'Ensure compliance with local jurisdictions to maintain healthy and safe spaces for your tenants.',
+       'assets/img/pwp-0058-gable.jpg', 'The painted gable of an older Victorian home',
+       'For landlords and property managers. As an EPA RRP Certified Firm, we handle any follow-up work in older buildings lead-safe, from the first scrape.'),
+      # TODO: swap in the client's drywall photo when it arrives
+      ('sheetrock', 'Sheetrock hanging, taping & repairs', 'Impressive sheetrock services to complement our painting abilities.',
+       'assets/ba/int-01-after.jpg', 'A finished stair hall, walls smooth and freshly painted',
+       'New board hung and taped, plus repairs to holes, cracks and water damage, finished smooth and ready for paint.')]
+
+
+def svc_more(k, name, more):
+    body = (f'<p class="eyebrow">{more[0]}</p><ul class="svc-list">{checklist(more[1])}</ul>' if isinstance(more, tuple) else f'<p>{more}</p>')
+    return f'{body}<a class="tlink" href="contact.html?service={k}#proposal">Request a proposal</a>'
+
+
+svc_cards = ''.join(f'''<li id="{k}" class="svc-card">
+    <figure>{img(src, alt, sizes='(max-width: 760px) 100vw, 50vw')}</figure>
+    <span class="n">{i:02d}</span><h2>{html.escape(n)}</h2><p>{t}</p>
+    <details><summary>Learn more</summary><div class="svc-more">{svc_more(k, n, more)}</div></details>
+  </li>''' for i, (k, n, t, src, alt, more) in enumerate(SV, 1))
+SERVICE_MAP = open('tools/service-area.svg', encoding='utf-8').read()
 page('services.html', 'Services · Painting With Purpose',
-     'Residential and commercial painting, deck staining, EMP lead inspections and gutter cleaning in northern Vermont.',
+     f'Residential and commercial painting, staining and maintenance, IRC compliance inspections, and sheetrock hanging, taping and repairs across {AREA}.',
      f'''<section class="phead">
-  <p class="eyebrow">Services</p>
+  <p class="eyebrow">Commercial &amp; residential services</p>
   <h1>Five services, one standard.</h1>
 </section>
-<figure class="page-photo">{img('assets/img/pwp-0631-painter.jpg', 'A painter on a ladder at a red shingle colonial', eager=True)}</figure>
-<section class="svc"><ul>{svc_rows}</ul></section>
+<section class="svc"><ul class="svc-grid">{svc_cards}</ul></section>
 <section class="steps">
   <p class="eyebrow">How a job runs</p>
   {wc('can')}
   <ol>
-    <li><h3>Walkthrough</h3><p>We visit, measure and talk through colors, surfaces and repairs.</p></li>
-    <li><h3>Written estimate</h3><p>Scope, schedule and price, in writing and free.</p></li>
+    <li><h3>Consultation</h3><p>We visit, measure and talk through colors, surfaces and repairs.</p></li>
+    <li><h3>Written proposal</h3><p>Scope, schedule and price, in writing.</p></li>
     <li><h3>Prep and paint</h3><p>Protection first, then prep, then paint. The site is cleaned at the end of every day.</p></li>
-    <li><h3>Final walkthrough</h3><p>We go over the finished job with you before we call it done.</p></li>
+    <li><h3>Final walkthrough</h3><p>We always inspect our work to make sure our standards and yours are aligned and met.</p></li>
   </ol>
-  <p class="area">Addison, Chittenden, Franklin, Grand Isle, Lamoille, Orange and Washington counties.</p>
+</section>
+<section class="area-map" id="area">
+  <div class="area-txt">
+    <p class="eyebrow">Where we work</p>
+    <h2>All of Vermont, and a little past its borders.</h2>
+    <p class="lede">Based in Winooski, we paint across Vermont, in Clinton, Essex, Warren and Washington counties in New York, and in Grafton, Sullivan and Cheshire counties in New Hampshire. Just outside the haze? Ask us anyway.</p>
+  </div>
+  <figure class="area-fig">{SERVICE_MAP}</figure>
 </section>''', 'services.html')
 
 # ---------------------------------------------------------------- purpose: words only
@@ -279,12 +416,12 @@ page('purpose.html', 'Purpose · Painting With Purpose',
 
 # ---------------------------------------------------------------- careers
 FORMOK = '<p class="form-ok" role="status" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>'
-page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greater Burlington. $18 to $30 an hour, paid lunch and room to grow.',
+page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Vermont. $18 to $30 an hour, paid lunch and room to grow.',
      f'''<section class="phead">
   <p class="eyebrow">Careers</p>
-  <h1>Paint with us.</h1>
+  <h1>Join our growing team of painters.</h1>
   {wc('ladder')}
-  <p class="lede">We hire people who show up, care about the details and treat every home like their own. Experience helps. We teach the rest.</p>
+  <p class="lede">Painting With Purpose is always looking for the right people to join our painting staff. Are you a hard worker and eager to learn? Do you have a passion for painting? Will you bring a supportive attitude to our team? If so, we’d love to hear from you.</p>
   <ul class="perks">
     <li>$18 to $30 an hour, based on experience</li>
     <li>Paid lunch, paid uniforms, paid drives over 30 minutes</li>
@@ -295,16 +432,18 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greate
 </section>
 <figure class="page-photo">{img('assets/img/crew-three.jpg', 'Three Painting With Purpose painters on a job, with ladders and drop cloths', eager=True)}</figure>
 <section class="roles">
-  <ul><li><a href="#apply"><span class="t">Painter</span><span class="k">Full-time · Greater Burlington</span><span class="go">Apply →</span></a></li></ul>
+  <ul><li><a href="#apply"><span class="t">Painter</span><span class="k">Full-time · Vermont</span><span class="go">Apply →</span></a></li></ul>
+  {f'<p class="indeed">We also post our openings on <a class="tlink" href="{INDEED}" target="_blank" rel="noopener">Indeed ↗</a></p>' if INDEED else ''}
 </section>
 <section class="form-sec" id="apply">
-  <h2>Apply</h2>
+  <h2>Join our growing team of painters and tradesmen and women.</h2>
   <form class="form" data-form novalidate>
     <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
     <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
     <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
     <label class="field"><span>Town you live in</span><input name="town" autocomplete="address-level2"></label>
     <label class="field"><span>Role</span><select name="role"><option>Painter</option></select></label>
+    <label class="field"><span>Years of experience</span><select name="years"><option>Less than 1</option><option>1 to 2</option><option>3 to 5</option><option>6 to 10</option><option>More than 10</option></select></label>
     <label class="field"><span>Experience</span><textarea name="exp" rows="3" placeholder="Where you’ve painted, for how long, and anything else we should know"></textarea></label>
     <button class="btn submit" type="submit">Send application</button>
     {FORMOK}
@@ -312,30 +451,41 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Greate
 </section>''', 'careers.html')
 
 # ---------------------------------------------------------------- contact: the porch again, as the invitation
-CONTACT_SERVICES = ['Residential painting', 'Commercial painting', 'Decks & porches', 'EMP lead inspection', 'Gutter cleaning', 'Not sure yet']
-towns = ['Burlington', 'South Burlington', 'Winooski', 'Colchester', 'Essex', 'Williston', 'Shelburne', 'Richmond', 'Hinesburg', 'Charlotte']
-page('contact.html', 'Free estimate · Painting With Purpose', 'Tell us about your project. Call 802-PAINTER or send a note for a free written estimate.',
+HEARD = ['Google', 'Instagram', 'Facebook', 'Front Porch Forum', 'A friend or neighbor', 'Saw our crew or a job sign', 'Other']
+MAP_EMBED = 'https://maps.google.com/maps?q=133+Elm+Street,+Winooski,+VT+05404&t=k&z=18&output=embed'
+page('contact.html', 'Request a proposal · Painting With Purpose', f'Request your free consultation today. Call 802-PAINTER or send us your project. Serving {AREA}.',
      f'''<section class="contact">
   <figure class="contact-media">{hero_media('porch', 'A freshly painted covered porch', eager=True, tall_only=True)}</figure>
   <div class="contact-txt">
-    <p class="eyebrow">Free estimate</p>
-    <h1>Tell us about your project.</h1>
-    <p class="lede">Call or text <a class="tlink" href="tel:{TEL}">802-PAINTER</a>, email <a class="tlink" href="mailto:{EMAIL}">{EMAIL}</a>, or use the form. We work across Chittenden County and the counties around it.</p>
-    <p class="addr">133 Elm Street, Office B, Winooski · 8:00 to 5:00 daily · <a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></p>
+    <p class="eyebrow">Contact us</p>
+    <h1 id="proposal">Request a proposal.</h1>
+    <p class="lede">Our team is ready to start your next painting project, no matter how big or small. Call or text <a class="tlink" href="tel:{TEL}">802-PAINTER</a>, email <a class="tlink" href="mailto:{EMAIL}">{EMAIL}</a>, or use the form.</p>
+    <p class="season">We are currently scheduling exterior painting consultations for projects to perform in exterior season 2027.</p>
     <form class="form" data-form="estimate" data-endpoint="{PORTAL_LEAD_URL}" data-org="{PORTAL_ORG}" novalidate>
-      <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
+      <label class="field"><span>First and last name</span><input name="name" autocomplete="name" required></label>
       <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
       <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required></label>
-      <label class="field"><span>Service</span><select name="service">{"".join(f"<option>{html.escape(n)}</option>" for n in CONTACT_SERVICES)}</select></label>
-      <label class="field"><span>Town</span><select name="town">{"".join(f"<option>{t}</option>" for t in towns)}<option>Other</option></select></label>
-      <label class="field"><span>Project</span><textarea name="msg" rows="3" placeholder="Rooms or surfaces, timing, budget if you have one"></textarea></label>
+      <label class="field"><span>Address</span><input name="address" autocomplete="street-address" placeholder="Where the work is"></label>
+      <label class="field"><span>Service</span><select name="service">{"".join(f'<option data-k="{s[0]}">{html.escape(s[1])}</option>' for s in SV)}<option>Not sure yet</option></select></label>
+      <label class="field"><span>Tell us about your project</span><textarea name="msg" rows="3" placeholder="Rooms or surfaces, what you have in mind"></textarea></label>
+      <label class="field"><span>Do you have any timing requirements?</span><input name="timing" placeholder="Optional"></label>
+      <label class="field"><span>Where did you hear about us?</span><select name="heard"><option value="">Choose one</option>{"".join(f"<option>{h}</option>" for h in HEARD)}</select></label>
       <div class="hp" aria-hidden="true"><label>Leave blank<input name="hp_fax2" tabindex="-1" autocomplete="nope"></label></div>
-      <button class="btn submit" type="submit">Request my estimate</button>
+      <button class="btn submit" type="submit">Request a proposal</button>
       <p class="consent">By sending, you agree Painting With Purpose may call or text you about this request. Message and data rates may apply. Reply STOP to opt out.</p>
       <p class="form-ok" role="status" hidden>Thanks, we have it. Someone from Painting With Purpose will be in touch soon, usually the same day.</p>
       <p class="form-err" role="alert" hidden></p>
     </form>
   </div>
+</section>
+<section class="visit">
+  <div class="visit-txt">
+    <p class="eyebrow">General information</p>
+    <p class="addr-big">{ADDRESS}</p>
+    <dl class="hours">{"".join(f'<div><dt>{d}</dt><dd>{h}</dd></div>' for d, h in HOURS)}</dl>
+    <p class="visit-social">{" · ".join(f'<a class="tlink" href="{u}" target="_blank" rel="noopener">{n}</a>' for n, u in SOCIALS)}</p>
+  </div>
+  <div class="visit-map"><iframe src="{MAP_EMBED}" title="Satellite view of the Painting With Purpose office at 133 Elm Street, Winooski" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
 </section>''', 'contact.html', og='assets/hero/porch-tall.jpg')
 
 
@@ -376,10 +526,10 @@ page('404.html', 'Page not found · Painting With Purpose', 'This page could not
   <p class="nf-links"><a class="tlink" href="index.html">Home</a><a class="tlink" href="work.html">Work</a><a class="tlink" href="contact.html">Contact</a></p>
 </section>''')
 # the 404 can be served at any depth, so its links start from the site root
-nf = open('404.html').read()
+nf = open('404.html', encoding='utf-8').read()
 for attr in ('href="', 'src="', 'srcset="'):
     nf = nf.replace(attr + 'assets/', attr + '/assets/')
 import re
 nf = re.sub(r'href="([a-z0-9-]+\.html)', r'href="/\1', nf)
-open('404.html', 'w').write(nf)
+open('404.html', 'w', encoding='utf-8').write(nf)
 print('built')

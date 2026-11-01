@@ -78,10 +78,15 @@
   /* work index: a small photo follows the pointer over each row (pointer devices only) */
   var peek = $('.peek');
   if (peek && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
-    var pimg = $('img', peek);
+    var pimg = $('img', peek), pal = $('.peek-pal', peek);
     $$('.prow[data-peek]').forEach(function (row) {
       new Image().src = row.dataset.peek;
-      row.addEventListener('mouseenter', function () { pimg.src = row.dataset.peek; peek.classList.add('on'); });
+      /* the job's paint colors sit under the photo */
+      var chips = (row.dataset.palette || '').split('|').filter(Boolean).map(function (s) {
+        var p = s.split(':');
+        return '<span class="chip"><i style="background:' + p[1] + '"></i><b>' + p[0] + '</b><small>' + p[1] + '</small></span>';
+      }).join('');
+      row.addEventListener('mouseenter', function () { pimg.src = row.dataset.peek; pal.innerHTML = chips; peek.classList.add('on'); });
       row.addEventListener('mouseleave', function () { peek.classList.remove('on'); });
     });
     document.addEventListener('mousemove', function (e) {
@@ -89,6 +94,20 @@
       peek.style.top = e.clientY + 'px';
     }, { passive: true });
   }
+
+  /* home split: hovering a side opens its checklist (CSS); the button does the same for touch and keyboard */
+  $$('.side-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var side = b.closest('.side'), open = !side.classList.contains('open');
+      $$('.side').forEach(function (s) { s.classList.remove('open'); $('.side-btn', s).setAttribute('aria-expanded', 'false'); });
+      side.classList.toggle('open', open);
+      b.setAttribute('aria-expanded', String(open));
+    });
+  });
+
+  /* contact: a "Request a proposal" link from a service preselects it */
+  var want = new URLSearchParams(location.search).get('service');
+  if (want) $$('select[name="service"] option').forEach(function (o) { if (o.dataset.k === want) o.selected = true; });
 
   /* before/after: the range input drives --p */
   $$('.ba-frame:not(.ba-dip)').forEach(function (f) {
@@ -148,9 +167,12 @@
       if (!form.dataset.endpoint) { done(); return; }
 
       var v = function (n) { var f = form.elements[n]; return f ? f.value.trim() : ''; };
+      /* the portal takes one free-text message, so address, timing and referral ride along at its top */
+      var extra = [['Address', v('address')], ['Timing', v('timing')], ['Heard about us', v('heard')]]
+        .filter(function (p) { return p[1]; }).map(function (p) { return p[0] + ': ' + p[1]; });
       var body = {
         org: form.dataset.org, name: v('name'), email: v('email'), phone: v('phone'), service: v('service'),
-        message: v('msg'), town: v('town'),
+        message: extra.concat(v('msg') ? [(extra.length ? '\n' : '') + v('msg')] : []).join('\n'), town: v('town'),
         page: location.pathname,
         source: leadSource,
         consent_text: ($('.consent', form) || {}).textContent || '',

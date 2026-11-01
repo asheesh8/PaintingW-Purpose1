@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Free estimate · Painting With Purpose</title>
-<meta name="description" content="Tell us about your project. Call 802-PAINTER or send a note for a free written estimate.">
+<title>Request a proposal · Painting With Purpose</title>
+<meta name="description" content="Request your free consultation today. Call 802-PAINTER or send us your project. Serving Vermont, eastern New York and western New Hampshire.">
 <meta name="theme-color" content="#FAF8F4">
-<meta property="og:title" content="Free estimate · Painting With Purpose">
-<meta property="og:description" content="Tell us about your project. Call 802-PAINTER or send a note for a free written estimate.">
+<meta property="og:title" content="Request a proposal · Painting With Purpose">
+<meta property="og:description" content="Request your free consultation today. Call 802-PAINTER or send us your project. Serving Vermont, eastern New York and western New Hampshire.">
 <meta property="og:image" content="https://paintingwithpurpose01.vercel.app/assets/hero/porch-tall.jpg">
 <meta property="og:url" content="https://paintingwithpurpose01.vercel.app/contact.html">
 <meta property="og:type" content="website">
@@ -18,7 +18,7 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
 <link rel="stylesheet" href="assets/css/site.css">
 </head>
 <body>
@@ -29,36 +29,48 @@
 </header>
 <div class="menu" id="menu" hidden>
   <ul class="menu-l"><li><a href="index.html">Home</a></li><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html" aria-current="page">Contact</a></li></ul>
-  <div class="menu-r"><p>Greater Burlington, Vermont</p><p><a href="tel:+18027246837">802-PAINTER · 802-724-6837</a><br><a href="mailto:office@pwpvt.com">office@pwpvt.com</a></p><p><a href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.facebook.com/PaintingWithPurposeVT" target="_blank" rel="noopener">Facebook</a></p></div>
+  <div class="menu-r"><p>Born in Vermont. Serving Vermont, eastern New York and western New Hampshire.</p><p><a href="tel:+18027246837">802-PAINTER · 802-724-6837</a><br><a href="mailto:office@pwpvt.com">office@pwpvt.com</a></p><p><a href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.facebook.com/PaintingWithPurposeVT" target="_blank" rel="noopener">Facebook</a></p></div>
 </div>
 <main id="main">
 <section class="contact">
   <figure class="contact-media"><img src="assets/hero/porch-tall.jpg" alt="A freshly painted covered porch" fetchpriority="high" decoding="async"><video class="clip" muted playsinline preload="auto" aria-hidden="true" data-src-tall="assets/hero/porch-tall.mp4"></video></figure>
   <div class="contact-txt">
-    <p class="eyebrow">Free estimate</p>
-    <h1>Tell us about your project.</h1>
-    <p class="lede">Call or text <a class="tlink" href="tel:+18027246837">802-PAINTER</a>, email <a class="tlink" href="mailto:office@pwpvt.com">office@pwpvt.com</a>, or use the form. We work across Chittenden County and the counties around it.</p>
-    <p class="addr">133 Elm Street, Office B, Winooski · 8:00 to 5:00 daily · <a href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">@paintingwithpurposevt</a></p>
+    <p class="eyebrow">Contact us</p>
+    <h1 id="proposal">Request a proposal.</h1>
+    <p class="lede">Our team is ready to start your next painting project, no matter how big or small. Call or text <a class="tlink" href="tel:+18027246837">802-PAINTER</a>, email <a class="tlink" href="mailto:office@pwpvt.com">office@pwpvt.com</a>, or use the form.</p>
+    <p class="season">We are currently scheduling exterior painting consultations for projects to perform in exterior season 2027.</p>
     <form class="form" data-form="estimate" data-endpoint="https://bnmntlqjoiqrskjkfzsv.supabase.co/functions/v1/portal-lead" data-org="painting-with-purpose" novalidate>
-      <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
+      <label class="field"><span>First and last name</span><input name="name" autocomplete="name" required></label>
       <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
       <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required></label>
-      <label class="field"><span>Service</span><select name="service"><option>Residential painting</option><option>Commercial painting</option><option>Decks &amp; porches</option><option>EMP lead inspection</option><option>Gutter cleaning</option><option>Not sure yet</option></select></label>
-      <label class="field"><span>Town</span><select name="town"><option>Burlington</option><option>South Burlington</option><option>Winooski</option><option>Colchester</option><option>Essex</option><option>Williston</option><option>Shelburne</option><option>Richmond</option><option>Hinesburg</option><option>Charlotte</option><option>Other</option></select></label>
-      <label class="field"><span>Project</span><textarea name="msg" rows="3" placeholder="Rooms or surfaces, timing, budget if you have one"></textarea></label>
+      <label class="field"><span>Address</span><input name="address" autocomplete="street-address" placeholder="Where the work is"></label>
+      <label class="field"><span>Service</span><select name="service"><option data-k="residential">Residential painting</option><option data-k="commercial">Commercial painting</option><option data-k="staining">Staining &amp; maintenance</option><option data-k="irc">IRC compliance inspections</option><option data-k="sheetrock">Sheetrock hanging, taping &amp; repairs</option><option>Not sure yet</option></select></label>
+      <label class="field"><span>Tell us about your project</span><textarea name="msg" rows="3" placeholder="Rooms or surfaces, what you have in mind"></textarea></label>
+      <label class="field"><span>Do you have any timing requirements?</span><input name="timing" placeholder="Optional"></label>
+      <label class="field"><span>Where did you hear about us?</span><select name="heard"><option value="">Choose one</option><option>Google</option><option>Instagram</option><option>Facebook</option><option>Front Porch Forum</option><option>A friend or neighbor</option><option>Saw our crew or a job sign</option><option>Other</option></select></label>
       <div class="hp" aria-hidden="true"><label>Leave blank<input name="hp_fax2" tabindex="-1" autocomplete="nope"></label></div>
-      <button class="btn submit" type="submit">Request my estimate</button>
+      <button class="btn submit" type="submit">Request a proposal</button>
       <p class="consent">By sending, you agree Painting With Purpose may call or text you about this request. Message and data rates may apply. Reply STOP to opt out.</p>
       <p class="form-ok" role="status" hidden>Thanks, we have it. Someone from Painting With Purpose will be in touch soon, usually the same day.</p>
       <p class="form-err" role="alert" hidden></p>
     </form>
   </div>
 </section>
+<section class="visit">
+  <div class="visit-txt">
+    <p class="eyebrow">General information</p>
+    <p class="addr-big">133 Elm Street, Office B, Winooski, Vermont</p>
+    <dl class="hours"><div><dt>Monday</dt><dd>7:30 to 4:00</dd></div><div><dt>Tuesday to Friday</dt><dd>8:00 to 4:00</dd></div><div><dt>Saturday and Sunday</dt><dd>Closed</dd></div></dl>
+    <p class="visit-social"><a class="tlink" href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">Instagram</a> · <a class="tlink" href="https://www.facebook.com/PaintingWithPurposeVT" target="_blank" rel="noopener">Facebook</a></p>
+  </div>
+  <div class="visit-map"><iframe src="https://maps.google.com/maps?q=133+Elm+Street,+Winooski,+VT+05404&t=k&z=18&output=embed" title="Satellite view of the Painting With Purpose office at 133 Elm Street, Winooski" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe></div>
+</section>
 </main>
 <footer class="ftr">
-  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>Greater Burlington, Vermont</p><p class="mute">Good painting that does some good.</p><img class="wc wc-mountains" src="assets/wc/mountains.webp" alt="" aria-hidden="true" width="364" height="286" loading="lazy" decoding="async"></div>
-  <ul class="ftr-links"><li><a href="tel:+18027246837">802-PAINTER</a></li><li><a href="mailto:office@pwpvt.com">office@pwpvt.com</a></li><li><a href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">@paintingwithpurposevt</a></li><li class="mute">133 Elm Street, Office B, Winooski, Vermont</li></ul>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont.</p><p class="mute">Serving Vermont, eastern New York and western New Hampshire.</p><img class="wc wc-mountains" src="assets/wc/mountains.webp" alt="" aria-hidden="true" width="364" height="286" loading="lazy" decoding="async"></div>
+  <ul class="ftr-links"><li><a href="tel:+18027246837">802-PAINTER</a></li><li><a href="mailto:office@pwpvt.com">office@pwpvt.com</a></li><li class="mute">133 Elm Street, Office B, Winooski, Vermont</li><li class="mute">Monday · 7:30 to 4:00</li><li class="mute">Tuesday to Friday · 8:00 to 4:00</li><li class="mute">Saturday and Sunday · Closed</li></ul>
   <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+  <ul class="ftr-social" aria-label="Follow us"><li><a href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">Instagram</a></li><li><a href="https://www.facebook.com/PaintingWithPurposeVT" target="_blank" rel="noopener">Facebook</a></li></ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
 <script src="assets/js/site.js"></script>
