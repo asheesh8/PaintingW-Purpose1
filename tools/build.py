@@ -84,6 +84,11 @@ def hero_media(name, alt, eager=False, tall_only=False, clip=True):
 
 SITE = 'https://paintingwithpurpose01.vercel.app'
 
+# The estimate form posts to the ArkiTech client portal: it saves the lead, texts the PWP team and adds the customer to JobTread.
+# The portal only accepts posts from the origins listed for this client (this site's domains and localhost).
+PORTAL_LEAD_URL = 'https://bnmntlqjoiqrskjkfzsv.supabase.co/functions/v1/portal-lead'
+PORTAL_ORG = 'painting-with-purpose'
+
 
 def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
     menu = ''.join(f'<li><a href="{h}"{cur(h, current)}>{html.escape(t)}</a></li>' for h, t in MENU)
@@ -317,15 +322,18 @@ page('contact.html', 'Free estimate · Painting With Purpose', 'Tell us about yo
     <h1>Tell us about your project.</h1>
     <p class="lede">Call or text <a class="tlink" href="tel:{TEL}">802-PAINTER</a>, email <a class="tlink" href="mailto:{EMAIL}">{EMAIL}</a>, or use the form. We work across Chittenden County and the counties around it.</p>
     <p class="addr">133 Elm Street, Office B, Winooski · 8:00 to 5:00 daily · <a href="{IG}" target="_blank" rel="noopener">@paintingwithpurposevt</a></p>
-    <form class="form" data-form novalidate>
+    <form class="form" data-form="estimate" data-endpoint="{PORTAL_LEAD_URL}" data-org="{PORTAL_ORG}" novalidate>
       <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
       <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
-      <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
+      <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required></label>
       <label class="field"><span>Service</span><select name="service">{"".join(f"<option>{html.escape(n)}</option>" for n in CONTACT_SERVICES)}</select></label>
       <label class="field"><span>Town</span><select name="town">{"".join(f"<option>{t}</option>" for t in towns)}<option>Other</option></select></label>
       <label class="field"><span>Project</span><textarea name="msg" rows="3" placeholder="Rooms or surfaces, timing, budget if you have one"></textarea></label>
+      <div class="hp" aria-hidden="true"><label>Leave blank<input name="hp_fax2" tabindex="-1" autocomplete="nope"></label></div>
       <button class="btn submit" type="submit">Request my estimate</button>
-      {FORMOK}
+      <p class="consent">By sending, you agree Painting With Purpose may call or text you about this request. Message and data rates may apply. Reply STOP to opt out.</p>
+      <p class="form-ok" role="status" hidden>Thanks, we have it. Someone from Painting With Purpose will be in touch soon, usually the same day.</p>
+      <p class="form-err" role="alert" hidden></p>
     </form>
   </div>
 </section>''', 'contact.html', og='assets/hero/porch-tall.jpg')

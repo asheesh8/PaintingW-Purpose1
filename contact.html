@@ -39,15 +39,18 @@
     <h1>Tell us about your project.</h1>
     <p class="lede">Call or text <a class="tlink" href="tel:+18027246837">802-PAINTER</a>, email <a class="tlink" href="mailto:office@pwpvt.com">office@pwpvt.com</a>, or use the form. We work across Chittenden County and the counties around it.</p>
     <p class="addr">133 Elm Street, Office B, Winooski · 8:00 to 5:00 daily · <a href="https://www.instagram.com/paintingwithpurposevt/" target="_blank" rel="noopener">@paintingwithpurposevt</a></p>
-    <form class="form" data-form novalidate>
+    <form class="form" data-form="estimate" data-endpoint="https://bnmntlqjoiqrskjkfzsv.supabase.co/functions/v1/portal-lead" data-org="painting-with-purpose" novalidate>
       <label class="field"><span>Name</span><input name="name" autocomplete="name" required></label>
       <label class="field"><span>Email</span><input name="email" type="email" autocomplete="email" required></label>
-      <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel"></label>
+      <label class="field"><span>Phone</span><input name="phone" type="tel" autocomplete="tel" inputmode="tel" required></label>
       <label class="field"><span>Service</span><select name="service"><option>Residential painting</option><option>Commercial painting</option><option>Decks &amp; porches</option><option>EMP lead inspection</option><option>Gutter cleaning</option><option>Not sure yet</option></select></label>
       <label class="field"><span>Town</span><select name="town"><option>Burlington</option><option>South Burlington</option><option>Winooski</option><option>Colchester</option><option>Essex</option><option>Williston</option><option>Shelburne</option><option>Richmond</option><option>Hinesburg</option><option>Charlotte</option><option>Other</option></select></label>
       <label class="field"><span>Project</span><textarea name="msg" rows="3" placeholder="Rooms or surfaces, timing, budget if you have one"></textarea></label>
+      <div class="hp" aria-hidden="true"><label>Leave blank<input name="hp_fax2" tabindex="-1" autocomplete="nope"></label></div>
       <button class="btn submit" type="submit">Request my estimate</button>
-      <p class="form-ok" role="status" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>
+      <p class="consent">By sending, you agree Painting With Purpose may call or text you about this request. Message and data rates may apply. Reply STOP to opt out.</p>
+      <p class="form-ok" role="status" hidden>Thanks, we have it. Someone from Painting With Purpose will be in touch soon, usually the same day.</p>
+      <p class="form-err" role="alert" hidden></p>
     </form>
   </div>
 </section>

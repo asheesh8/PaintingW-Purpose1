@@ -222,7 +222,13 @@ body.menu-open { overflow: hidden; }
 .field .err { grid-column: 2; font-size: 13px; color: #a33a2c; }
 .field .err[hidden] { display: none; }
 .submit { justify-self: start; margin-top: 28px; }
+.submit:disabled { opacity: .6; cursor: wait; }
 .form-ok { margin-top: 20px; color: var(--navy); }
+.form-err { margin-top: 16px; color: #a33a2c; font-size: 15px; }
+.form-ok[hidden], .form-err[hidden] { display: none; }
+.consent { margin-top: 14px; max-width: 46ch; font-size: 12.5px; line-height: 1.5; color: var(--mute); }
+/* spam trap: not displayed at all, so browsers never autofill it, people never see it, but simple bots still fill it */
+.hp { display: none; }
 
 /* contact: the porch beside the form */
 .contact { display: grid; grid-template-columns: 2fr 3fr; min-height: calc(100svh - var(--hdr)); }

@@ -103,12 +103,27 @@
     more.parentNode.hidden = true;
   });
 
-  /* demo forms: check required fields, then thank (nothing is sent) */
+  /* where this visit came from, saved on the first page they land on (later pages only show this site as the referrer) */
+  var leadSource = (function () {
+    var q = new URLSearchParams(location.search), src = '';
+    if (q.get('utm_source')) src = [q.get('utm_source'), q.get('utm_medium'), q.get('utm_campaign')].filter(Boolean).join(' / ');
+    else if (document.referrer) { try { var r = new URL(document.referrer); if (r.origin !== location.origin) src = r.hostname; } catch (e) {} }
+    try {
+      var saved = sessionStorage.getItem('lead_src');
+      if (saved && !src) return saved;
+      if (src || !saved) sessionStorage.setItem('lead_src', src || 'direct');
+    } catch (e) {}
+    return src || 'direct';
+  })();
+
+  /* forms: check required fields, then send (forms with data-endpoint) or just thank (the careers demo form) */
+  var phoneOk = function (v) { var d = v.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, ''); return d.length === 10; };
   $$('[data-form]').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
+      if (form.dataset.sending) return;
       var bad = $$('[required]', form).filter(function (i) {
-        var ok = i.value.trim() !== '' && i.checkValidity();
+        var ok = i.value.trim() !== '' && i.checkValidity() && (i.name !== 'phone' || !form.dataset.endpoint || phoneOk(i.value));
         var f = i.closest('.field');
         if (f) {
           f.classList.toggle('bad', !ok);
@@ -121,16 +136,38 @@
             f.appendChild(m);
             i.setAttribute('aria-describedby', m.id);
           }
-          m.textContent = i.value.trim() === '' ? 'Required' : (i.type === 'email' ? 'Check this email address' : 'Check this field');
+          m.textContent = i.value.trim() === '' ? 'Required' : (i.type === 'email' ? 'Check this email address' : i.name === 'phone' ? 'Enter a 10-digit phone number' : 'Check this field');
           m.hidden = ok;
         }
         i.setAttribute('aria-invalid', String(!ok));
         return !ok;
       });
       if (bad.length) { bad[0].focus(); return; }
-      $('.form-ok', form).hidden = false;
-      var s = $('.submit', form);
-      if (s) s.hidden = true;
+      var s = $('.submit', form), err = $('.form-err', form);
+      var done = function () { $('.form-ok', form).hidden = false; if (s) s.hidden = true; };
+      if (!form.dataset.endpoint) { done(); return; }
+
+      var v = function (n) { var f = form.elements[n]; return f ? f.value.trim() : ''; };
+      var body = {
+        org: form.dataset.org, name: v('name'), email: v('email'), phone: v('phone'), service: v('service'),
+        message: v('msg'), town: v('town'),
+        page: location.pathname,
+        source: leadSource,
+        consent_text: ($('.consent', form) || {}).textContent || '',
+        hp_fax2: v('hp_fax2'),
+      };
+      form.dataset.sending = '1';
+      if (err) err.hidden = true;
+      if (s) { s.disabled = true; s.dataset.label = s.textContent; s.textContent = 'Sending…'; }
+      var fail = function (msg) {
+        delete form.dataset.sending;
+        if (s) { s.disabled = false; s.textContent = s.dataset.label; }
+        if (err) { err.textContent = (msg || 'That didn’t go through.') + ' You can also call or text 802-PAINTER.'; err.hidden = false; }
+      };
+      fetch(form.dataset.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) { if (res.ok && res.j.ok) done(); else fail(res.j.error); })
+        .catch(function () { fail('We couldn’t reach our server.'); });
     });
   });
 })();
