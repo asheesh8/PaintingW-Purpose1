@@ -105,16 +105,6 @@
     }, { passive: true });
   }
 
-  /* home split: hovering a side opens its checklist (CSS); the button does the same for touch and keyboard */
-  $$('.side-btn').forEach(function (b) {
-    b.addEventListener('click', function () {
-      var side = b.closest('.side'), open = !side.classList.contains('open');
-      $$('.side').forEach(function (s) { s.classList.remove('open'); $('.side-btn', s).setAttribute('aria-expanded', 'false'); });
-      side.classList.toggle('open', open);
-      b.setAttribute('aria-expanded', String(open));
-    });
-  });
-
   /* contact: a "Request a proposal" link from a service preselects it */
   var want = new URLSearchParams(location.search).get('service');
   if (want) $$('select[name="service"] option').forEach(function (o) { if (o.dataset.k === want) o.selected = true; });
@@ -203,3 +193,130 @@
     });
   });
 })();
+
+document.querySelectorAll('[data-detail-lens]').forEach(function (photo) {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  var image = photo.querySelector('img');
+  var lens = document.createElement('span');
+  lens.className = 'painting-lens';
+  lens.setAttribute('aria-hidden', 'true');
+  photo.appendChild(lens);
+  var palette = document.createElement('span');
+  palette.className = 'painting-palette';
+  palette.setAttribute('aria-hidden', 'true');
+  var swatches = Array.from({ length: 3 }, function () {
+    var swatch = document.createElement('span');
+    palette.appendChild(swatch);
+    return swatch;
+  });
+  photo.appendChild(palette);
+  var sample = document.createElement('canvas');
+  sample.width = 7;
+  sample.height = 7;
+  var context = sample.getContext('2d', { willReadFrequently: true });
+  var unavailable = false;
+
+  function updatePalette(x, y, width, height, spread) {
+    if (unavailable || !context) return;
+    var radius = Math.max(3, Math.round(spread));
+    context.imageSmoothingEnabled = false;
+    context.clearRect(0, 0, 7, 7);
+    // Draw the full source at the lens scale so responsive image density
+    // cannot shift the sampled crop relative to the CSS background.
+    var scale = 7 / (radius * 2);
+    context.drawImage(image, 3.5 - x * scale, 3.5 - y * scale, width * scale, height * scale);
+    try {
+      var colors = context.getImageData(0, 0, 7, 7).data;
+      var center = 24 * 4;
+      function distance(offset) {
+        return Math.hypot(colors[offset] - colors[center],
+          colors[offset + 1] - colors[center + 1], colors[offset + 2] - colors[center + 2]);
+      }
+      // Keep swatches near the pointed-at color when the patch crosses an edge.
+      var offsets = [center];
+      [[22, 23, 17, 16], [26, 25, 31, 32]].forEach(function (neighbors) {
+        var match = neighbors.map(function (pixel) { return pixel * 4; }).find(function (offset) {
+          return colors[offset + 3] && distance(offset) <= 36;
+        });
+        offsets.push(match === undefined ? center : match);
+      });
+      swatches.forEach(function (swatch, i) {
+        var offset = offsets[i];
+        var hex = '#' + Array.from(colors.slice(offset, offset + 3), function (value) {
+          return value.toString(16).padStart(2, '0');
+        }).join('').toUpperCase();
+        swatch.style.setProperty('--sample-color', hex);
+        swatch.textContent = hex;
+      });
+      palette.classList.add('has-colors');
+    } catch (error) {
+      if (error.name !== 'SecurityError') throw error;
+      unavailable = true;
+    }
+  }
+
+  var pointer;
+  var frame = 0;
+
+  function hide() {
+    pointer = null;
+    photo.classList.remove('lens-active');
+  }
+
+  function render() {
+    frame = 0;
+    if (!pointer || !image.naturalWidth) return;
+    var bounds = image.getBoundingClientRect();
+    var container = photo.getBoundingClientRect();
+    var x = pointer.clientX - bounds.left;
+    var y = pointer.clientY - bounds.top;
+    if (x < 0 || y < 0 || x >= bounds.width || y >= bounds.height) {
+      hide();
+      return;
+    }
+
+    var radius = lens.offsetWidth / 2;
+    var centerX = Math.max(radius, Math.min(x, bounds.width - radius));
+    var centerY = Math.max(radius, Math.min(y, bounds.height - radius));
+    var cover = Math.max(bounds.width / image.naturalWidth, bounds.height / image.naturalHeight);
+    var width = image.naturalWidth * cover;
+    var height = image.naturalHeight * cover;
+    var position = getComputedStyle(image).objectPosition.split(' ').map(parseFloat);
+    var sourceX = centerX + (width - bounds.width) * position[0] / 100;
+    var sourceY = centerY + (height - bounds.height) * position[1] / 100;
+    var zoom = 1.65;
+
+    lens.style.transform = 'translate3d(' + (bounds.left - container.left + centerX - radius) +
+      'px, ' + (bounds.top - container.top + centerY - radius) + 'px, 0)';
+    lens.style.backgroundImage = 'url("' + image.currentSrc + '")';
+    lens.style.backgroundSize = width * zoom + 'px ' + height * zoom + 'px';
+    lens.style.backgroundPosition = (radius - sourceX * zoom) + 'px ' + (radius - sourceY * zoom) + 'px';
+    updatePalette(sourceX, sourceY, width, height, radius / zoom * .3);
+    var paletteWidth = palette.offsetWidth;
+    var paletteHeight = palette.offsetHeight;
+    var paletteX = Math.max(0, Math.min(centerX - paletteWidth / 2, bounds.width - paletteWidth));
+    var paletteY = centerY + radius + 8;
+    if (paletteY + paletteHeight > bounds.height) paletteY = centerY - radius - paletteHeight - 8;
+    palette.style.transform = 'translate3d(' + (bounds.left - container.left + paletteX) +
+      'px, ' + (bounds.top - container.top + Math.max(0, paletteY)) + 'px, 0)';
+    photo.classList.add('lens-active');
+  }
+
+  function scheduleRender() {
+    if (pointer && !frame) frame = requestAnimationFrame(render);
+  }
+
+  photo.addEventListener('pointermove', function (event) {
+    if (event.pointerType !== 'mouse' || event.target.closest('a')) {
+      hide();
+      return;
+    }
+    pointer = event;
+    scheduleRender();
+  });
+  photo.addEventListener('pointerleave', hide);
+  window.addEventListener('scroll', hide, { passive: true });
+  image.addEventListener('load', scheduleRender);
+  new ResizeObserver(scheduleRender).observe(image);
+});
