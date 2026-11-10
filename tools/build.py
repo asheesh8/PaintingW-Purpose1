@@ -52,10 +52,10 @@ def cur(h, current):
     return ' aria-current="page"' if h == current else ''
 
 
-def img(src, alt, sizes='100vw', eager=False, cls=''):
+def img(src, alt, sizes='100vw', eager=False, cls='', pos=True):
     md = src.replace('.jpg', '-md.jpg')
     srcset = f' srcset="{md} 1100w, {src} 2400w" sizes="{sizes}"' if os.path.exists(md) else ''
-    pos = f' style="object-position:{POS[src]}"' if src in POS else ''
+    pos = f' style="object-position:{POS[src]}"' if pos and src in POS else ''
     load = 'fetchpriority="high"' if eager else 'loading="lazy"'
     c = f' class="{cls}"' if cls else ''
     return f'<img{c} src="{src}"{srcset} alt="{alt}" {load} decoding="async"{pos}>'
@@ -168,17 +168,68 @@ def checklist(items):
     return ''.join(f'<li>{html.escape(t)}</li>' for t in items)
 
 
-SIDES = [('com', 'Commercial', 'Exterior painting &amp; staining', 'assets/img/pwp-1335.jpg', 'An auto dealership entrance under a freshly painted red and white canopy', COMMERCIAL_LIST),
-         ('res', 'Residential', 'Interior painting &amp; staining', 'assets/img/pwp-1094.jpg', 'A slate-blue built-in bookcase and wainscot in a living room', RESIDENTIAL_LIST)]
-split = ''.join(f'''<article class="side side-{k}">
-    {img(src, alt, sizes='(max-width: 760px) 100vw, 64vw')}
-    <div class="side-in">
-      <p class="eyebrow">{who}</p>
-      <h2>{what}</h2>
-      <button class="side-btn" type="button" aria-expanded="false" aria-controls="incl-{k}">What’s included</button>
-      <ul class="side-list" id="incl-{k}">{checklist(items)}</ul>
-    </div>
-  </article>''' for k, who, what, src, alt, items in SIDES)
+# the home "Inside and out" section: two job photos (hover for a closer look), then each scope grouped by stage
+INTERIOR_SCOPE = [('Protection & setup', ['Material and equipment procurement', 'Floor protection', 'Furniture moving and protection', 'Masking', 'Containment building']),
+                  ('Repairs & surface prep', ['Popcorn ceiling removal', 'Popcorn ceiling texture application', 'Drywall repair', 'Plaster repair', 'Spackle patching',
+                                              'Hand sanding', 'Festool HEPA vacuum sanding', 'Pole sanding', 'Drywall sanding, walls and ceilings', 'Dusting', 'Caulking', 'Caulk removal']),
+                  ('Paint, stain & specialty finishes', ['Oil priming', 'Standard priming', 'Shellac priming', 'Painting', 'Spray painting', 'Cabinet refinishing',
+                                                         'Lime washing', 'Staining', 'Clear coating']),
+                  ('Finishing touches', ['Demasking', 'Job site organization and cleanup'])]
+EXTERIOR_SCOPE = [('Protection & setup', ['Material and equipment procurement', 'RRP lead-safe practices and documentation', 'Ground, driveway and roof protection',
+                                          'Masking', 'Liquid masking', 'Containment building']),
+                  ('Repairs & surface prep', ['Rot repair', 'Epoxy repair', 'Carpentry improvements', 'Scraping', 'Sanding', 'Dusting', 'Caulking', 'Wood filling',
+                                              'Moisture content testing', 'Glazing', 'Painting', 'Window washing', 'Block filling']),
+                  ('Primers & finishes', ['Encapsulation', 'Oil priming', 'Standard priming', 'Spot priming', 'Demasking', 'Staining']),
+                  ('Finishing touches', ['Pressure washing', 'Soft washing', 'Touch-up painting', 'Job site organization and cleanup'])]
+# (project, eyebrow, heading, image, alt, hover hint, link text, magnifier)
+PAINTING_PHOTOS = [('project-built-ins-and-porch.html', '01 · Built-ins &amp; Porch', 'Interior', 'assets/img/pwp-1094.jpg',
+                    'A slate-blue built-in bookcase and wainscot in a living room', 'Hover to see the finish up close.', 'See the built-ins project', True),
+                   ('project-dealership.html', '02 · Dealership', 'Exterior', 'assets/img/pwp-1335.jpg',
+                    'An auto dealership entrance under a freshly painted red and white canopy', '', 'See the dealership project', False)]
+PAINTING_CARDS = [('Interior services', 'Fresh paint for walls and ceilings, refinished cabinets and built-ins, and stained woodwork. We protect floors and furniture and repair drywall and plaster before painting as needed.', INTERIOR_SCOPE),
+                  ('Exterior services', 'Painting and staining for homes and commercial buildings. We wash and prep the surfaces and address rot and damaged wood as needed before applying the finish.', EXTERIOR_SCOPE)]
+
+
+def painting_photo(fn, eyebrow, h, src, alt, hint, link, lens):
+    hint = f'\n        <p class="painting-invite">{hint}</p>' if hint else ''
+    return f'''    <div class="painting-photo" data-dark{" data-detail-lens" if lens else ""}>
+      {img(src, alt, sizes='(max-width: 760px) 100vw, 73vw', pos=False)}
+      <div class="painting-photo-title">
+        <p class="eyebrow">{eyebrow}</p>
+        <h3>{h}</h3>{hint}
+        <a class="painting-project-link" href="{fn}">{link} <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>'''
+
+
+def painting_card(h, t, scope):
+    groups = ''.join(f'''
+          <div>
+            <dt>{g}</dt>
+            <dd>{" · ".join(items)}</dd>
+          </div>''' for g, items in scope)
+    return f'''    <article class="home-painting-card">
+      <h3>{h}</h3>
+      <p>{t}</p>
+      <div class="painting-scope">
+        <p class="eyebrow">Full scope · {sum(len(i) for _, i in scope)} services</p>
+        <dl>{groups}
+        </dl>
+      </div>
+    </article>'''
+
+
+home_painting = f'''<section class="home-painting" aria-labelledby="home-painting-title">
+  <p class="eyebrow">Painting &amp; staining</p>
+  <h2 id="home-painting-title">Inside and out.</h2>
+  <div class="home-painting-grid">
+{chr(10).join(painting_photo(*x) for x in PAINTING_PHOTOS)}
+  </div>
+  <div class="home-painting-services">
+{chr(10).join(painting_card(*x) for x in PAINTING_CARDS)}
+  </div>
+</section>'''
+
 
 EXPERIENCE = [('Exceptional quality', 'We always inspect our work to ensure our standards and your standards are aligned and met.'),
               ('Trust and respect', 'We treat you and your home with respect and care, as if it were our own. We show up on time and keep our promise to work safely, with precision and quality, every day and with a great attitude.'),
@@ -224,9 +275,7 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont'
   {wc('leaves')}
 </section>
 
-<section class="split" data-dark aria-label="Commercial and residential">
-  {split}
-</section>
+{home_painting}
 
 <section class="reveal" data-dark>
   <div class="reveal-pin">
@@ -276,7 +325,7 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont'
 </section>
 
 <section class="invite">
-  <figure class="invite-media" data-dark>{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
+  <figure class="invite-media" id="porch-detail" data-dark data-detail-lens>{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
   <div class="invite-txt">
     <p class="invite-beat"><a href="project-built-ins-and-porch.html">Built-ins &amp; Porch · Greater Burlington</a></p>
     <h2>{CTA}.</h2>
@@ -328,8 +377,9 @@ for i, fn in enumerate(ORDER):
     nxt = ORDER[(i + 1) % len(ORDER)]
     slot = LEAD[fn].split('/')[-1].replace('-wide.jpg', '') if LEAD[fn].startswith('assets/hero/') else None
     hero = hero_media(slot, plain(d['title']), eager=True, clip=slot != 'sigma') if slot else img(LEAD[fn], plain(d['title']), eager=True)
-    more = f'<figure class="pj-more">{img(MORE[fn], plain(d["title"]) + ", detail", sizes="(max-width: 760px) 100vw, 70vw")}</figure>\n' if fn in MORE else ''
-    body = f'''<section class="pj-hero">{hero}</section>
+    more = f'<figure class="pj-more" data-detail-lens>{img(MORE[fn], plain(d["title"]) + ", detail", sizes="(max-width: 760px) 100vw, 70vw")}</figure>\n' if fn in MORE else ''
+    lens = ' data-detail-lens' if fn == 'project-dealership.html' else ''
+    body = f'''<section class="pj-hero"{lens}>{hero}</section>
 <section class="pj-head">
   <p class="eyebrow">{d['kind']}</p>
   <h1>{d['title']}</h1>
