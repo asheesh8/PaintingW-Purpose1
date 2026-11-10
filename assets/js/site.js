@@ -1,4 +1,4 @@
-/* Painting With Purpose, demo 1: menu, solid header, hero clips, work peek, before/after sliders, demo forms. No libraries. */
+/* Painting With Purpose, demo 1: menu, solid header, hero clips, work peek, portfolio collage, forms. No libraries. */
 (function () {
   'use strict';
   var $ = function (s, r) { return (r || document).querySelector(s); };
@@ -109,31 +109,22 @@
   var want = new URLSearchParams(location.search).get('service');
   if (want) $$('select[name="service"] option').forEach(function (o) { if (o.dataset.k === want) o.selected = true; });
 
-  /* before/after: the range input drives --p */
-  $$('.ba-frame:not(.ba-dip)').forEach(function (f) {
-    var r = $('.ba-range', f);
-    if (r) r.addEventListener('input', function () { f.style.setProperty('--p', r.value + '%'); });
-  });
-
-  /* before & after: nine pairs first, the rest on request */
-  var more = $('[data-show-more]');
-  if (more) more.addEventListener('click', function () {
-    $$('.ba[data-more]').forEach(function (f) { f.hidden = false; });
-    more.parentNode.hidden = true;
-  });
-
-  /* where this visit came from, saved on the first page they land on (later pages only show this site as the referrer) */
-  var leadSource = (function () {
-    var q = new URLSearchParams(location.search), src = '';
-    if (q.get('utm_source')) src = [q.get('utm_source'), q.get('utm_medium'), q.get('utm_campaign')].filter(Boolean).join(' / ');
-    else if (document.referrer) { try { var r = new URL(document.referrer); if (r.origin !== location.origin) src = r.hostname; } catch (e) {} }
-    try {
-      var saved = sessionStorage.getItem('lead_src');
-      if (saved && !src) return saved;
-      if (src || !saved) sessionStorage.setItem('lead_src', src || 'direct');
-    } catch (e) {}
-    return src || 'direct';
-  })();
+  /* portfolio: a collage tile opens that job's sheet in a dialog */
+  var dlg = $('.job-dlg');
+  if (dlg && dlg.showModal) {
+    var opener;
+    $$('[data-job]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        opener = b;
+        $$('.job', dlg).forEach(function (a) { a.hidden = a.id !== 'job-' + b.dataset.job; });
+        dlg.showModal();
+        dlg.scrollTop = 0;
+      });
+    });
+    $('[data-close]', dlg).addEventListener('click', function () { dlg.close(); });
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function () { if (opener) opener.focus(); });
+  }
 
   /* forms: check required fields, then send (forms with data-endpoint) or just thank (the careers demo form) */
   var phoneOk = function (v) { var d = v.replace(/\D/g, '').replace(/^1(?=\d{10}$)/, ''); return d.length === 10; };

@@ -28,7 +28,7 @@ IG, FB = 'https://www.instagram.com/paintingwithpurposevt/', 'https://www.facebo
 LINKEDIN, FPF, INDEED = '', '', ''
 SOCIALS = [(n, u) for n, u in (('Instagram', IG), ('Facebook', FB), ('LinkedIn', LINKEDIN), ('Front Porch Forum', FPF)) if u]
 
-MENU = [('index.html', 'Home'), ('work.html', 'Work'), ('transformations.html', 'Before & after'), ('services.html', 'Services'),
+MENU = [('index.html', 'Home'), ('work.html', 'Work'), ('transformations.html', 'Portfolio'), ('services.html', 'Services'),
         ('about.html', 'About'), ('purpose.html', 'Purpose'), ('careers.html', 'Careers'), ('contact.html', 'Contact')]
 ORDER = ['project-sigma-phi-house.html', 'project-queen-anne-victorian.html', 'project-library.html',
          'project-built-ins-and-porch.html', 'project-lake-cottage.html', 'project-red-shingle-colonial.html',
@@ -137,7 +137,7 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
 <footer class="ftr">
   <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont, for Vermonters.</p><p class="mute">Serving {AREA}.</p>{wc("mountains")}</div>
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li class="mute">{ADDRESS}</li>{"".join(f'<li class="mute">{d} · {h}</li>' for d, h in HOURS)}</ul>
-  <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="about.html">About</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+  <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Portfolio</a></li><li><a href="services.html">Services</a></li><li><a href="about.html">About</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
   <ul class="ftr-social" aria-label="Follow us">{"".join(f'<li><a href="{u}" target="_blank" rel="noopener">{n}</a></li>' for n, u in SOCIALS)}</ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
@@ -592,34 +592,68 @@ page('contact.html', 'Request a proposal · Painting With Purpose', f'Request yo
 </section>''', 'contact.html', og='assets/hero/porch-tall.jpg')
 
 
-# ---------------------------------------------------------------- before & after: the one place with many photos
-BASZ = '(max-width: 760px) 46vw, (max-width: 1024px) 46vw, 30vw'
+# ---------------------------------------------------------------- portfolio: one deep collage, the bigger the job the bigger the frame
+# Each tile opens the job: its story, its scope and every photo of it, prep included. Sizes: xl and l are the signature
+# jobs, t is a tall frame, w a wide one, m a single cell. Order is the reading order; the grid packs the gaps.
+NEVER = {'assets/img/pwp-0735.jpg', 'assets/img/pwp-1343.jpg'}
+COLLAGE = [('project-sigma-phi-house.html', 'xl'), ('ext-07', 't'), ('com-02', 'l'), ('project-queen-anne-victorian.html', 'xl'),
+           ('int-03', 'w'), ('ext-02', 't'), ('project-library.html', 'xl'), ('deck-02', 'm'), ('ext-05', 't'),
+           ('project-built-ins-and-porch.html', 'l'), ('int-02', 'w'), ('ext-04', 't'), ('project-red-shingle-colonial.html', 'l'),
+           ('int-01', 'm'), ('deck-04', 't'), ('project-lake-cottage.html', 'l'), ('deck-01', 'w'), ('ext-03', 't'), ('ext-06', 't'),
+           ('project-dealership.html', 'l'), ('ext-08', 'm'), ('deck-03', 'w'), ('ext-09', 't'), ('int-04', 'm'), ('ext-01', 'm'),
+           ('rot-01', 'm'), ('int-05', 'm')]
+TFD = {t['id']: t for t in TF}
 
 
-def ba_frame(t):
-    if t['dip']:  # different angles: show the two frames side by side instead of a slider
-        return (f'<div class="ba-frame ba-dip"><img src="assets/ba/{t["id"]}-before.jpg" srcset="assets/ba/{t["id"]}-before-th.jpg 480w, assets/ba/{t["id"]}-before.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, before" loading="lazy" decoding="async">'
-                f'<img src="assets/ba/{t["id"]}-after.jpg" srcset="assets/ba/{t["id"]}-after-th.jpg 480w, assets/ba/{t["id"]}-after.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, after" loading="lazy" decoding="async"></div>')
-    return f'''<div class="ba-frame" style="--p:50%">
-    <img src="assets/ba/{t["id"]}-before.jpg" srcset="assets/ba/{t["id"]}-before-th.jpg 480w, assets/ba/{t["id"]}-before.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, before" loading="lazy" decoding="async">
-    <img class="ba-after" src="assets/ba/{t["id"]}-after.jpg" srcset="assets/ba/{t["id"]}-after-th.jpg 480w, assets/ba/{t["id"]}-after.jpg 1024w" sizes="{BASZ}" alt="{t["title"]}, after" loading="lazy" decoding="async">
-    <span class="ba-tag b">Before</span><span class="ba-tag a">After</span>
-    <span class="ba-line" aria-hidden="true"></span>
-    <input class="ba-range" type="range" min="0" max="100" value="50" aria-label="Compare before and after: {t["title"]}">
-  </div>'''
+def thumb(src):
+    for v in (src.replace('.jpg', '-md.jpg'), src.replace('.jpg', '-th.jpg')):
+        if os.path.exists(v):
+            return v
+    return src
 
 
-FIRST = ['ext-07', 'ext-04', 'deck-04', 'int-02', 'com-02', 'ext-06', 'deck-02', 'ext-01', 'int-04']
-TFO = [t for i in FIRST for t in TF if t['id'] == i] + [t for t in TF if t['id'] not in FIRST]
-tiles = ''.join(f'<figure class="ba"{" data-more hidden" if k >= len(FIRST) else ""}>{ba_frame(t)}<figcaption><span>{t["title"]}</span><span>{t["note"]}</span></figcaption></figure>' for k, t in enumerate(TFO))
-page('transformations.html', 'Before & after · Painting With Purpose', 'The first day and the last day of twenty Vermont painting projects.',
+def job(key):
+    """(id, title, eyebrow, note, tile photo, [(photo, label)], project page) for a project page or a transformation."""
+    if key in P:
+        d = P[key]
+        pics = [LEAD[key]] + [g[1] for g in d.get('gallery', [])] + ([MORE[key]] if key in MORE else [])
+        pics = [x for i, x in enumerate(pics) if x not in pics[:i] and x not in NEVER]
+        return (key.replace('.html', ''), d['title'], d['kind'], d['lede'], LEAD[key], [(x, '') for x in pics], key)
+    t = TFD[key]
+    return (key, t['title'], t['cat'].capitalize(), t['note'], f'assets/ba/{key}-after.jpg',
+            [(f'assets/ba/{key}-after.jpg', 'Finished'), (f'assets/ba/{key}-before.jpg', 'Where it started')], None)
+
+
+def tile(key, size):
+    k, title, eyebrow, note, src, pics, link = job(key)
+    return (f'<li class="cl cl-{size}"><button type="button" data-job="{k}" aria-haspopup="dialog">'
+            f'<img src="{thumb(src)}" alt="" loading="lazy" decoding="async"{POSATTR(key) if key in P else ""}>'
+            f'<span class="cl-cap"><span class="cl-e">{eyebrow}</span><span class="cl-t">{title}</span></span></button></li>')
+
+
+def job_sheet(key):
+    k, title, eyebrow, note, src, pics, link = job(key)
+    figs = ''.join(f'<figure>{img(x, plain(title) + ", " + (lab.lower() or "photo " + str(i + 1)), sizes="(max-width: 760px) 100vw, 60vw")}'
+                   + (f'<figcaption>{lab}</figcaption>' if lab else '') + '</figure>' for i, (x, lab) in enumerate(pics))
+    side = f'<dl class="credits">{P[key]["facts"].replace("<dt>", "<div><dt>").replace("</dd>", "</dd></div>")}</dl>' if link else ''
+    more = f'<p><a class="tlink" href="{link}">The full project</a></p>' if link else ''
+    return f'''<article class="job" id="job-{k}" hidden>
+    <div class="job-pics">{figs}</div>
+    <div class="job-txt"><p class="eyebrow">{eyebrow}</p><h2>{title}</h2><p>{note}</p>{side}{more}</div>
+  </article>'''
+
+
+page('transformations.html', 'Portfolio · Painting With Purpose', 'A collage of Painting With Purpose jobs across Vermont, from fraternity houses and libraries to porches and kitchens.',
      f'''<section class="phead">
-  <p class="eyebrow">Before &amp; after</p>
-  <h1>Same house, same angle.</h1>
-  <p class="lede">Drag across any photo to compare the first day with the last.</p>
+  <p class="eyebrow">Portfolio</p>
+  <h1>Work we sign our name to.</h1>
+  <p class="lede">The bigger the job, the bigger the frame. Open any photo for the story, the scope and the prep behind it.</p>
 </section>
-<section class="ba-grid">{tiles}</section>
-<p class="ba-all"><button class="tlink" type="button" data-show-more>Show all {len(TF)}</button></p>''', 'transformations.html')
+<section class="collage" aria-label="Portfolio"><ul>{"".join(tile(k, z) for k, z in COLLAGE)}</ul></section>
+<dialog class="job-dlg" aria-label="Job details">
+  <button class="job-x" type="button" data-close>Close</button>
+  {"".join(job_sheet(k) for k, _ in COLLAGE)}
+</dialog>''', 'transformations.html')
 # ---------------------------------------------------------------- 404 (Vercel serves 404.html for missing paths)
 page('404.html', 'Page not found · Painting With Purpose', 'This page could not be found.',
      '''<section class="phead nf">
