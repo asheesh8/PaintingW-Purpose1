@@ -29,7 +29,7 @@ LINKEDIN, FPF, INDEED = '', '', ''
 SOCIALS = [(n, u) for n, u in (('Instagram', IG), ('Facebook', FB), ('LinkedIn', LINKEDIN), ('Front Porch Forum', FPF)) if u]
 
 MENU = [('index.html', 'Home'), ('work.html', 'Work'), ('transformations.html', 'Before & after'), ('services.html', 'Services'),
-        ('purpose.html', 'Purpose'), ('careers.html', 'Careers'), ('contact.html', 'Contact')]
+        ('about.html', 'About'), ('purpose.html', 'Purpose'), ('careers.html', 'Careers'), ('contact.html', 'Contact')]
 ORDER = ['project-sigma-phi-house.html', 'project-queen-anne-victorian.html', 'project-library.html',
          'project-built-ins-and-porch.html', 'project-lake-cottage.html', 'project-red-shingle-colonial.html',
          'project-dealership.html']
@@ -135,9 +135,9 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
 {body}
 </main>
 <footer class="ftr">
-  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont.</p><p class="mute">Serving {AREA}.</p>{wc("mountains")}</div>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont, for Vermonters.</p><p class="mute">Serving {AREA}.</p>{wc("mountains")}</div>
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li class="mute">{ADDRESS}</li>{"".join(f'<li class="mute">{d} · {h}</li>' for d, h in HOURS)}</ul>
-  <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
+  <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Before &amp; after</a></li><li><a href="services.html">Services</a></li><li><a href="about.html">About</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
   <ul class="ftr-social" aria-label="Follow us">{"".join(f'<li><a href="{u}" target="_blank" rel="noopener">{n}</a></li>' for n, u in SOCIALS)}</ul>
   <p class="ftr-bot"><span>© 2026 Painting With Purpose LLC</span><span>Part of every job goes to CVOEO.</span><span>Site by ArkiTech Solutions</span></p>
 </footer>
@@ -178,12 +178,12 @@ INTERIOR_SCOPE = [('Protection & setup', ['Material and equipment procurement', 
 EXTERIOR_SCOPE = [('Protection & setup', ['Material and equipment procurement', 'RRP lead-safe practices and documentation', 'Ground, driveway and roof protection',
                                           'Masking', 'Liquid masking', 'Containment building']),
                   ('Repairs & surface prep', ['Rot repair', 'Epoxy repair', 'Carpentry improvements', 'Scraping', 'Sanding', 'Dusting', 'Caulking', 'Wood filling',
-                                              'Moisture content testing', 'Glazing', 'Painting', 'Window washing', 'Block filling']),
+                                              'Moisture content testing', 'Glazing', 'Painting', 'Pressure washing', 'Window washing', 'Block filling']),
                   ('Primers & finishes', ['Encapsulation', 'Oil priming', 'Standard priming', 'Spot priming', 'Demasking', 'Staining']),
-                  ('Finishing touches', ['Pressure washing', 'Soft washing', 'Touch-up painting', 'Job site organization and cleanup'])]
+                  ('Finishing touches', ['Soft washing', 'Touch-up painting', 'Job site organization and cleanup'])]
 # (project, eyebrow, heading, image, alt, hover hint, link text, magnifier)
-PAINTING_PHOTOS = [('project-built-ins-and-porch.html', '01 · Built-ins &amp; Porch', 'Interior', 'assets/img/pwp-1094.jpg',
-                    'A slate-blue built-in bookcase and wainscot in a living room', 'Hover to see the finish up close.', 'See the built-ins project', True),
+PAINTING_PHOTOS = [('project-library.html', '01 · Ilsley Library', 'Interior', 'assets/img/pwp-0856.jpg',
+                    'Bright white walls and timber shelving in the Ilsley Library stacks', 'Hover to see the finish up close.', 'See the Ilsley Library project', True),
                    ('project-dealership.html', '02 · Dealership', 'Exterior', 'assets/img/pwp-1335.jpg',
                     'An auto dealership entrance under a freshly painted red and white canopy', '', 'See the dealership project', False)]
 PAINTING_CARDS = [('Interior services', 'Fresh paint for walls and ceilings, refinished cabinets and built-ins, and stained woodwork. We protect floors and furniture and repair drywall and plaster before painting as needed.', INTERIOR_SCOPE),
@@ -244,11 +244,11 @@ REVIEWS = [('The BEST experience we’ve ever had with painters: they were commu
            ('They helped me fix a crack from a previous painting company and made it look incredibly amazing. They painted shelves and baseboards with precision. Their mission for giving back to the homeless community is truly amazing.', 'Pam Mathe')]
 
 CERTS = [('Certified', ['EPA RRP Certified Firm', 'OSHA 10 compliant', 'Registered Vermont contractor', 'Respirator fit testing',
-                        'Google certified', 'BBB accredited']),
+                        'Google certified']),
          ('Insured and in good standing', ['Commercial general liability and workmanship policy', 'Workers’ compensation policy', 'Umbrella policy',
                                            'Commercial and non-owned auto policy', 'In good standing with the Vermont Secretary of State',
-                                           'D-U-N-S Number (Dun &amp; Bradstreet)', 'EMR rating', '700 Business Vantage credit score (Oct. 1, 2026)',
-                                           '100% commercial contractor pre-qualification record', 'We never sell your data']),
+                                           'D-U-N-S Number (Dun &amp; Bradstreet)', 'EMR rating of 0.91 (FY26)',
+                                           '100% commercial contractor pre-qualification record']),
          ('Recognized', ['Meyers Cup grand prize champions, 2024', 'UVM business pitch competition grand prize winners, 2023',
                          'Catamount Innovation Fund selection, 2022–2023'])]
 
@@ -258,7 +258,7 @@ def where(fn, place, note):
     return f'<a class="where" href="{fn}"><span class="where-t">{P[fn]["title"]}</span><span class="where-l">{place} · {note}</span></a>'
 
 
-page('index.html', 'Painting With Purpose · A painting company born in Vermont',
+page('index.html', 'Painting With Purpose · A painting company born in Vermont, for Vermonters',
      f'Residential and commercial painting, staining, sheetrock and IRC compliance inspections across {AREA}.',
      f'''<section class="h1-screen" data-dark>
   <div class="h1-media">
@@ -270,8 +270,8 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont'
 </section>
 
 <section class="intro">
-  <h2>A painting company born in Vermont.</h2>
-  <p class="lede">Painting With Purpose is a professional painting company serving the entire state of Vermont, eastern New York and western New Hampshire. We are known for our precise work and our commitment to enriching our communities through charitable causes that matter to Vermonters.</p>
+  <h2>A painting company born in Vermont, for Vermonters.</h2>
+  <p class="lede">Painting With Purpose is a professional painting and staining company serving the entire state of Vermont, eastern New York and western New Hampshire. We are award-winning for our precise work and our commitment to enriching Vermont communities through charitable causes that matter to Vermonters.</p>
   {wc('leaves')}
 </section>
 
@@ -285,7 +285,7 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont'
 </section>
 
 <section class="inside">
-  <div class="inside-media" data-dark>{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<div class="inside-beat">{where('project-library.html', 'Greater Burlington', 'Full interior')}</div></div>
+  <div class="inside-media" data-dark>{hero_media('library', 'A library atrium with timber ceilings, a stone wall and glass doors onto fall trees', clip=False)}<div class="inside-beat">{where('project-library.html', 'Middlebury, Vermont', 'Full interior and exterior')}</div></div>
   <div class="inside-items">
     <p class="eyebrow">What we do</p>
     <ul class="inside-list">
@@ -327,7 +327,7 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont'
 <section class="invite">
   <figure class="invite-media" id="porch-detail" data-dark data-detail-lens>{hero_media('porch', 'A freshly painted covered porch with a diamond pattern in the floor', tall_only=True, clip=False)}</figure>
   <div class="invite-txt">
-    <p class="invite-beat"><a href="project-built-ins-and-porch.html">Built-ins &amp; Porch · Greater Burlington</a></p>
+    <p class="invite-beat"><a href="project-built-ins-and-porch.html">Museum renovation · Middlebury</a></p>
     <h2>{CTA}.</h2>
     <p>Careful prep, a clean site at the end of every day, and a written proposal for your project.</p>
     <p class="invite-links"><a class="tlink" href="contact.html">Request a proposal</a><a href="tel:{TEL}">802-PAINTER</a></p>
@@ -458,7 +458,7 @@ page('purpose.html', 'Purpose · Painting With Purpose',
 <section class="prose">
   <p class="big">Homelessness touches the whole community, and the answers are few. We wanted our work to be one of them.</p>
   <p>Part of the profit from every job goes to CVOEO, the Champlain Valley Office of Economic Opportunity. It helps people in shelters move into permanent housing by covering security deposits, a first month’s rent and utilities. So far that is more than $15,000, and more than a dozen people in secure homes. It adds nothing to your price.</p>
-  <p>Zach and Gabe Dunn started Painting With Purpose in 2022 to show that a painting company could be very good at the work and good for the place it works. The business plan took first place at the Joy and Jerry Meyers Cup at UVM. More than a hundred jobs later, the idea is the same.</p>
+  <p>Zach Dunn and Josh Malek started Painting With Purpose in 2022 to show that a painting company could be very good at the work and good for the place it works. In 2024 it won the first Joy and Jerry Meyers Cup at UVM. Today 1% of every base painting contract goes to a charitable cause chosen by the client. <a class="tlink" href="about.html">Our story</a></p>
   <p><a class="tlink" href="https://www.cvoeo.org/" target="_blank" rel="noopener">About CVOEO ↗</a></p>
 </section>
 <figure class="wc-band">{wc('church')}</figure>
@@ -467,21 +467,71 @@ page('purpose.html', 'Purpose · Painting With Purpose',
   <p class="eyebrow">Pam Mathe · Google review</p>
 </section>''', 'purpose.html')
 
+# ---------------------------------------------------------------- about: Zach's story, by year
+# Copy is the polished draft of Zach's Nov 7 text (copy/about-us-v2.md), pending his final revision.
+# The three photos are stand-ins until the personal shots arrive: Zach on a job, the crew at the Elm Street shop, the Meyers Cup or CVOEO.
+STORY = [('2021', 'How it started', [
+    'In October 2021, Zach Dunn was sitting in a marketing management class when someone from Collegiate Entrepreneurs gave a one-minute pitch for an internship that combined painting with running a business. Zach had already run Dunn Brothers Mobile Auto Detailing for two years. When the sign-up sheet came around, he wrote his name on it.',
+    'Soon after, he was riding along with the manager who had made the pitch, learning about painting and how the program worked. Over the next few weeks he went to the internship meetings and learned the logistics behind the work.',
+    'That same fall, Paul Dragon, president of CVOEO, spoke to Zach’s leadership and organizational behavior class. He talked about his life, his role, and what CVOEO does for the Burlington community. Zach was struck by Paul’s character and his story, and made up his mind to meet him again.',
+    'Over the December break, walking through downtown Burlington, Zach saw people shivering at bus stops and on park benches, wearing jacket over jacket. He remembered that CVOEO was one of the organizations helping people without shelter, and realized that what he had learned running his own business could be put to work for them.',
+    'By the end of the break, Zach had a job at Job Well Done LLC, a painting company in Burlington, and worked around his classes to learn the trade. There he became friends with Josh, a painter who had recently moved to Vermont and had been painting since high school. They had the same work ethic and the same eye for detail, and by the end of January, Zach could see the friendship becoming a partnership.']),
+  ('2022', 'Painting With Purpose', [
+    'On February 6, 2022, the State of Vermont granted Zach Dunn and Joshua Malek a partnership for Painting With Purpose LLC. The mission was to beautify the greater Burlington area and help solve Vermont’s homelessness crisis by partnering with CVOEO. A portion of the profit from every job would go to people in shelters working toward permanent housing, to help cover security deposits, first month’s rent and utilities.',
+    'The first job came that March: a whole-house interior, with every ceiling, wall, trim and door repainted. Through the summer and fall, a four-person crew completed more than 40 jobs, large and small, and raised more than $10,500 for the cause.']),
+  ('2023', 'One hundred jobs', [
+    'Zach graduated in the summer of 2023. By then Painting With Purpose had passed 100 jobs, grown to 14 team members, and given $15,000 toward ending homelessness in Vermont.']),
+  ('2024', 'The Meyers Cup', [
+    'The UVM Grossman School of Business held the first Joy and Jerry Meyers Cup, the largest grand prize of any college entrepreneurship competition in the United States. Zach and Josh, joined by new partner Jake Falanga, spent months preparing. Painting With Purpose took the grand prize: $212,500, plus in-kind services from local businesses that had pledged to support the winner.',
+    'The prize moved the company out of sheds and basements and into its own shop and office at the end of Elm Street in Winooski, where it still works from today. Late that year, Jake accepted a job in Connecticut, where he grew up, and agreed to a buyout.']),
+  ('Today', 'A wider purpose', [
+    'In early 2026, Josh sold his share of the company to Zach, and has since started his own painting business in Colchester, Serenity Painting.',
+    'The mission has grown with the company. Every team member is treated with dignity and earns a living wage, and 1% of every base painting contract goes to a charitable cause chosen by the client.'])]
+ABOUT_PHOTOS = {'2021': ('assets/img/pwp-0631-painter.jpg', 'A Painting With Purpose painter on a ladder at a red shingle colonial'),
+                '2024': ('assets/img/crew-three.jpg', 'Three Painting With Purpose painters on a job, with ladders and drop cloths')}
+
+
+def chapter(year, h, paras):
+    ph = ABOUT_PHOTOS.get(year)
+    fig = f'<figure class="ab-photo">{img(ph[0], ph[1], sizes="(max-width: 760px) 100vw, 40vw")}</figure>' if ph else ''
+    return f'''<section class="ab-ch{" has-photo" if ph else ""}">
+  <div class="ab-yr"><p class="eyebrow">{year}</p><h2>{h}</h2></div>
+  <div class="ab-txt">{"".join(f"<p>{t}</p>" for t in paras)}</div>
+  {fig}
+</section>'''
+
+
+page('about.html', 'About · Painting With Purpose',
+     'Founded in 2022 by Zach Dunn and Josh Malek, winners of the first Meyers Cup, working from Winooski. 1% of every base contract goes to a cause the client chooses.',
+     f'''<section class="phead">
+  <p class="eyebrow">About us</p>
+  <h1>A sign-up sheet, a cold walk, and a friendship on a paint crew.</h1>
+  <p class="lede">Zach Dunn and Josh Malek founded Painting With Purpose in February 2022 to paint the greater Burlington area beautifully and help end homelessness in Vermont. Since then the company has completed well over 100 jobs, won the inaugural Joy and Jerry Meyers Cup, and works from its own shop in Winooski.</p>
+</section>
+<figure class="page-photo">{img('assets/img/pwp-1247.jpg', 'The Painting With Purpose booth at a street fair in a Vermont town', eager=True)}</figure>
+{chr(10).join(chapter(*c) for c in STORY)}
+<section class="ab-end">
+  <p class="big">When you hire Painting With Purpose, you can expect careful work, clear communication, and the knowledge that part of what you pay goes back into the community we all share.</p>
+  <p class="invite-links"><a class="tlink" href="contact.html">Request a free consultation</a><a href="tel:{TEL}">802-PAINTER</a></p>
+</section>''', 'about.html')
+
 # ---------------------------------------------------------------- careers
+PERKS_NOW = ['$18 to $40 an hour', 'Weekly pay', 'Paid lunch, paid uniforms, and paid drives over 30 minutes to the job',
+             'Flexible scheduling and vacation', 'Room to grow into a lead role', 'Paid Christmas and Thanksgiving holidays']
+PERKS_6MO = ['One week of paid time off', 'Short and long term disability', '$25,000 life insurance policy']
+PERKS_LATER = ['Two weeks of paid time off after three years', 'Bonuses', 'Company vehicle and gas card, for some roles']
 FORMOK = '<p class="form-ok" role="status" hidden>Thanks. This demo form isn’t connected yet. On the live site it goes straight to the PWP inbox.</p>'
-page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Vermont. $18 to $30 an hour, paid lunch and room to grow.',
+page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Vermont. $18 to $40 an hour, weekly pay, paid lunch and room to grow.',
      f'''<section class="phead">
   <p class="eyebrow">Careers</p>
   <h1>Join our growing team of painters.</h1>
   {wc('ladder')}
   <p class="lede">Painting With Purpose is always looking for the right people to join our painting staff. Are you a hard worker and eager to learn? Do you have a passion for painting? Will you bring a supportive attitude to our team? If so, we’d love to hear from you.</p>
-  <ul class="perks">
-    <li>$18 to $30 an hour, based on experience</li>
-    <li>Paid lunch, paid uniforms, paid drives over 30 minutes</li>
-    <li>Short and long term disability, and life insurance</li>
-    <li>Flexible scheduling and vacation</li>
-    <li>Room to grow into a lead role</li>
-  </ul>
+  <div class="perks-wrap">
+    <div><p class="eyebrow">From day one</p><ul class="perks">{"".join(f"<li>{t}</li>" for t in PERKS_NOW)}</ul></div>
+    <div><p class="eyebrow">After six months</p><ul class="perks">{"".join(f"<li>{t}</li>" for t in PERKS_6MO)}</ul></div>
+    <div><p class="eyebrow">As you stay</p><ul class="perks">{"".join(f"<li>{t}</li>" for t in PERKS_LATER)}</ul></div>
+  </div>
 </section>
 <figure class="page-photo">{img('assets/img/crew-three.jpg', 'Three Painting With Purpose painters on a job, with ladders and drop cloths', eager=True)}</figure>
 <section class="roles">
@@ -504,7 +554,7 @@ page('careers.html', 'Careers · Painting With Purpose', 'Painter jobs in Vermon
 </section>''', 'careers.html')
 
 # ---------------------------------------------------------------- contact: the porch again, as the invitation
-HEARD = ['Google', 'Instagram', 'Facebook', 'Front Porch Forum', 'A friend or neighbor', 'Saw our crew or a job sign', 'Other']
+HEARD = ['Google', 'Instagram', 'Facebook', 'Front Porch Forum', 'A friend or neighbor', 'Seen us around', 'Other']
 MAP_EMBED = 'https://maps.google.com/maps?q=133+Elm+Street,+Winooski,+VT+05404&t=k&z=18&output=embed'
 page('contact.html', 'Request a proposal · Painting With Purpose', f'Request your free consultation today. Call 802-PAINTER or send us your project. Serving {AREA}.',
      f'''<section class="contact">

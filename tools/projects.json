@@ -2,10 +2,10 @@
  "project-built-ins-and-porch.html": {
   "file": "project-built-ins-and-porch.html",
   "hero": "assets/img/pwp-1094-shelves.jpg",
-  "title": "Built-ins &amp; Porch",
-  "kind": "Residential · Cabinetry and porch floor",
-  "lede": "A slate built-in with matching wainscot, and a porch floor laid out in a two-grey diamond.",
-  "facts": "<dt>Location</dt><dd>Greater Burlington</dd><dt>Type</dt><dd>Residential, interior and porch</dd><dt>Surfaces</dt><dd>Cabinetry, wainscot, porch floor, ceiling</dd><dt>Prep</dt><dd>Degloss, sand, bonding primer</dd><dt>Finish</dt><dd>Satin enamel, porch and floor enamel</dd>",
+  "title": "Museum Renovation",
+  "kind": "Commercial · Full interior repaint",
+  "lede": "A full interior repaint for a Middlebury museum: slate built-ins with matching wainscot, and a porch floor laid out in a two-grey diamond.",
+  "facts": "<dt>Location</dt><dd>Middlebury, Vermont</dd><dt>Type</dt><dd>Museum, full interior repaint</dd><dt>Surfaces</dt><dd>Cabinetry, wainscot, porch floor, ceiling</dd><dt>Prep</dt><dd>Degloss, sand, bonding primer</dd><dt>Finish</dt><dd>Satin enamel, porch and floor enamel</dd>",
   "palette": "<div class=\"sw\"><i style=\"background:#5B6675\"></i><span>Slate</span><span class=\"meta\">#5B6675</span></div><div class=\"sw\"><i style=\"background:#F1F0EC\"></i><span>Wall white</span><span class=\"meta\">#F1F0EC</span></div><div class=\"sw\"><i style=\"background:#9EA3A2\"></i><span>Porch grey</span><span class=\"meta\">#9EA3A2</span></div><div class=\"sw\"><i style=\"background:#6E655B\"></i><span>Taupe</span><span class=\"meta\">#6E655B</span></div>",
   "gallery": [
    [
@@ -25,7 +25,7 @@
    "project-queen-anne-victorian.html",
    "Queen Anne Victorian"
   ],
-  "loc": "Greater Burlington"
+  "loc": "Middlebury"
  },
  "project-dealership.html": {
   "file": "project-dealership.html",
@@ -51,17 +51,17 @@
   ],
   "next": [
    "project-built-ins-and-porch.html",
-   "Built-ins &amp; Porch"
+   "Museum Renovation"
   ],
   "loc": "Chittenden County"
  },
  "project-lake-cottage.html": {
   "file": "project-lake-cottage.html",
   "hero": "assets/img/pwp-0695.jpg",
-  "title": "Lake Cottage",
-  "kind": "Residential · Exterior and porch",
+  "title": "Blake Cottage",
+  "kind": "Residential · Full exterior",
   "lede": "A lakeside camp in deep lake blue, with white rails and a screened porch ready for many more summers.",
-  "facts": "<dt>Location</dt><dd>Lake Champlain</dd><dt>Type</dt><dd>Residential, exterior</dd><dt>Surfaces</dt><dd>Clapboard, porch, rails, deck</dd><dt>Prep</dt><dd>Wash, scrape, board repair, prime</dd><dt>Finish</dt><dd>Satin body, gloss rails</dd>",
+  "facts": "<dt>Location</dt><dd>Ferrisburgh, Vermont</dd><dt>Type</dt><dd>Residential, full exterior</dd><dt>Surfaces</dt><dd>Clapboard, porch, rails, deck</dd><dt>Prep</dt><dd>Wash, scrape, board repair, prime</dd><dt>Finish</dt><dd>Satin body, gloss rails</dd>",
   "palette": "<div class=\"sw\"><i style=\"background:#4F6F93\"></i><span>Lake blue</span><span class=\"meta\">#4F6F93</span></div><div class=\"sw\"><i style=\"background:#F1F1EE\"></i><span>White trim</span><span class=\"meta\">#F1F1EE</span></div><div class=\"sw\"><i style=\"background:#A9AEB0\"></i><span>Metal roof</span><span class=\"meta\">#A9AEB0</span></div><div class=\"sw\"><i style=\"background:#8A8C86\"></i><span>Deck grey</span><span class=\"meta\">#8A8C86</span></div>",
   "gallery": [
    [
@@ -85,15 +85,15 @@
    "project-red-shingle-colonial.html",
    "Red Shingle Colonial"
   ],
-  "loc": "Lake Champlain"
+  "loc": "Ferrisburgh"
  },
  "project-library.html": {
   "file": "project-library.html",
   "hero": "assets/img/pwp-0995.jpg",
-  "title": "Library &amp; Community Hall",
-  "kind": "Commercial · Full interior",
+  "title": "Ilsley Library",
+  "kind": "Commercial · Full interior and exterior",
   "lede": "Clean white walls against timber and stone, with an open stair finished to gallery standard.",
-  "facts": "<dt>Location</dt><dd>Greater Burlington</dd><dt>Type</dt><dd>Commercial, interior</dd><dt>Surfaces</dt><dd>Walls, ceilings, stair, restrooms</dd><dt>Prep</dt><dd>Patch, sand, prime new drywall</dd><dt>Finish</dt><dd>Scrubbable eggshell</dd>",
+  "facts": "<dt>Location</dt><dd>Middlebury, Vermont</dd><dt>Type</dt><dd>Public library, full interior and exterior</dd><dt>Surfaces</dt><dd>Walls, ceilings, stair, restrooms</dd><dt>Prep</dt><dd>Patch, sand, prime new drywall</dd><dt>Finish</dt><dd>Scrubbable eggshell</dd>",
   "palette": "<div class=\"sw\"><i style=\"background:#EDEEEB\"></i><span>Gallery white</span><span class=\"meta\">#EDEEEB</span></div><div class=\"sw\"><i style=\"background:#D9BE97\"></i><span>Ash timber</span><span class=\"meta\">#D9BE97</span></div><div class=\"sw\"><i style=\"background:#1E1F1E\"></i><span>Black steel</span><span class=\"meta\">#1E1F1E</span></div><div class=\"sw\"><i style=\"background:#A69E8E\"></i><span>Fieldstone</span><span class=\"meta\">#A69E8E</span></div>",
   "gallery": [
    [
@@ -117,7 +117,7 @@
    "project-dealership.html",
    "Auto Dealership"
   ],
-  "loc": "Greater Burlington"
+  "loc": "Middlebury"
  },
  "project-queen-anne-victorian.html": {
   "file": "project-queen-anne-victorian.html",
@@ -171,7 +171,7 @@
   ],
   "next": [
    "project-library.html",
-   "Library &amp; Community Hall"
+   "Ilsley Library"
   ],
   "loc": "Chittenden County"
  },
@@ -199,7 +199,7 @@
   ],
   "next": [
    "project-lake-cottage.html",
-   "Lake Cottage"
+   "Blake Cottage"
   ],
   "loc": "Burlington"
  }
