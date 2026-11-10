@@ -421,6 +421,7 @@ body.menu-open { overflow: hidden; }
 .cl button:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
 @media (hover: hover) { .cl button:hover img { transform: scale(1.03); } }
 .job-dlg { width: min(1240px, calc(100vw - 32px)); max-width: none; max-height: calc(100svh - 32px); margin: auto; padding: 0; border: 0; background: var(--paper); color: var(--ink); overflow: auto; overscroll-behavior: contain; }
+html:has(.job-dlg[open]) { overflow: hidden; }
 .job-dlg::backdrop { background: rgba(10, 14, 16, .72); }
 .job { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: clamp(24px, 3vw, 48px); padding: clamp(20px, 3vw, 40px); }
 .job[hidden] { display: none; }
