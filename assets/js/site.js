@@ -186,9 +186,19 @@
 })();
 
 document.querySelectorAll('[data-detail-lens]').forEach(function (photo) {
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
-
   var image = photo.querySelector('img');
+  var mouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var hint = photo.querySelector('.painting-invite');
+  if (hint && !mouse) hint.textContent = 'Press and hold to see the finish up close.';
+  /* the lens shows the largest file in the srcset, so the close-up stays sharp */
+  var full = (image.getAttribute('srcset') || '').split(',').map(function (c) {
+    var p = c.trim().split(/\s+/);
+    return { src: p[0], w: parseInt(p[1], 10) || 0 };
+  }).sort(function (a, b) { return b.w - a.w; })[0];
+  var zoomSrc = (full && full.src) || image.currentSrc || image.src;
+  var big = new Image();
+  var bigReady = false;
+  big.onload = function () { bigReady = true; scheduleRender(); };
   var lens = document.createElement('span');
   lens.className = 'painting-lens';
   lens.setAttribute('aria-hidden', 'true');
@@ -276,11 +286,12 @@ document.querySelectorAll('[data-detail-lens]').forEach(function (photo) {
     var position = getComputedStyle(image).objectPosition.split(' ').map(parseFloat);
     var sourceX = centerX + (width - bounds.width) * position[0] / 100;
     var sourceY = centerY + (height - bounds.height) * position[1] / 100;
-    var zoom = 1.65;
+    var zoom = 2.4;
 
     lens.style.transform = 'translate3d(' + (bounds.left - container.left + centerX - radius) +
       'px, ' + (bounds.top - container.top + centerY - radius) + 'px, 0)';
-    lens.style.backgroundImage = 'url("' + image.currentSrc + '")';
+    if (!big.src) big.src = zoomSrc;
+    lens.style.backgroundImage = 'url("' + (bigReady ? zoomSrc : image.currentSrc) + '")';
     lens.style.backgroundSize = width * zoom + 'px ' + height * zoom + 'px';
     lens.style.backgroundPosition = (radius - sourceX * zoom) + 'px ' + (radius - sourceY * zoom) + 'px';
     updatePalette(sourceX, sourceY, width, height, radius / zoom * .3);
@@ -299,7 +310,8 @@ document.querySelectorAll('[data-detail-lens]').forEach(function (photo) {
   }
 
   photo.addEventListener('pointermove', function (event) {
-    if (event.pointerType !== 'mouse' || event.target.closest('a')) {
+    if (event.pointerType !== 'mouse') return;
+    if (event.target.closest('a')) {
       hide();
       return;
     }
@@ -307,7 +319,35 @@ document.querySelectorAll('[data-detail-lens]').forEach(function (photo) {
     scheduleRender();
   });
   photo.addEventListener('pointerleave', hide);
-  window.addEventListener('scroll', hide, { passive: true });
+
+  /* touch: press and hold for the lens, then drag it; a quick swipe still scrolls the page */
+  var hold = 0, holding = false, start;
+  photo.addEventListener('touchstart', function (e) {
+    if (e.touches.length !== 1 || e.target.closest('a')) return;
+    var t = e.touches[0];
+    start = { x: t.clientX, y: t.clientY };
+    clearTimeout(hold);
+    hold = setTimeout(function () {
+      holding = true;
+      pointer = { clientX: start.x, clientY: start.y };
+      scheduleRender();
+    }, 220);
+  }, { passive: true });
+  photo.addEventListener('touchmove', function (e) {
+    var t = e.touches[0];
+    if (holding) {
+      e.preventDefault();
+      pointer = { clientX: t.clientX, clientY: t.clientY };
+      scheduleRender();
+    } else if (start && Math.hypot(t.clientX - start.x, t.clientY - start.y) > 10) {
+      clearTimeout(hold);
+    }
+  }, { passive: false });
+  function release() { clearTimeout(hold); holding = false; start = null; hide(); }
+  photo.addEventListener('touchend', release);
+  photo.addEventListener('touchcancel', release);
+  photo.addEventListener('contextmenu', function (e) { if (holding) e.preventDefault(); });
+  window.addEventListener('scroll', function () { if (!holding) hide(); }, { passive: true });
   image.addEventListener('load', scheduleRender);
   new ResizeObserver(scheduleRender).observe(image);
 });

@@ -190,7 +190,7 @@ EXTERIOR_SCOPE = [('Protection & setup', ['Material and equipment procurement', 
 PAINTING_PHOTOS = [('project-library.html', '01 · Ilsley Library', 'Interior', 'assets/img/pwp-0856.jpg',
                     'Bright white walls and timber shelving in the Ilsley Library stacks', 'Hover to see the finish up close.', 'See the Ilsley Library project', True),
                    ('project-dealership.html', '02 · Dealership', 'Exterior', 'assets/img/pwp-1335.jpg',
-                    'An auto dealership entrance under a freshly painted red and white canopy', '', 'See the dealership project', False)]
+                    'An auto dealership entrance under a freshly painted red and white canopy', 'Hover to see the finish up close.', 'See the dealership project', True)]
 PAINTING_CARDS = [('Interior services', 'Fresh paint for walls and ceilings, refinished cabinets and built-ins, and stained woodwork. We protect floors and furniture and repair drywall and plaster before painting as needed.', INTERIOR_SCOPE),
                   ('Exterior services', 'Painting and staining for homes and commercial buildings. We wash and prep the surfaces and address rot and damaged wood as needed before applying the finish.', EXTERIOR_SCOPE)]
 
@@ -270,7 +270,10 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont,
     <picture><source media="(max-aspect-ratio: 4/5)" srcset="assets/hero/hero-poster-tall.jpg"><img src="assets/hero/hero-poster.jpg" alt="" fetchpriority="high" decoding="async"></picture>
     <video class="hero-loop" muted loop playsinline preload="auto" aria-hidden="true" data-src="assets/hero/hero-loop-1080.mp4" data-src-sm="assets/hero/hero-loop-720.mp4" data-src-tall="assets/hero/hero-loop-tall.mp4"></video>
   </div>
-  <h1 class="h1-logo"><img src="assets/logo-hero.webp" srcset="assets/logo-hero-800.webp 800w, assets/logo-hero.webp 1600w" sizes="min(72vw, 720px)" alt="Painting With Purpose, residential and commercial services" width="1600" height="1039" fetchpriority="high"></h1>
+  <div class="h1-logo">
+    <a class="h1-rank" href="https://www.contractorsranked.com/painters/essex-junction-vt" target="_blank" rel="noopener">Ranked #1 for painters in Chittenden County</a>
+    <h1><img src="assets/logo-hero.webp" srcset="assets/logo-hero-800.webp 800w, assets/logo-hero.webp 1600w" sizes="min(72vw, 720px)" alt="Painting With Purpose, residential and commercial services" width="1600" height="1039" fetchpriority="high"></h1>
+  </div>
   <span class="h1-cue" aria-hidden="true"></span>
 </section>
 

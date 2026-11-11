@@ -83,7 +83,10 @@ body.menu-open { overflow: hidden; }
 .h1-media .hero-loop.ready { opacity: 1; }
 .h1-screen::after { content: ""; position: absolute; inset: 0; z-index: 1; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(10, 14, 16, .38), rgba(10, 14, 16, .18) 100%), linear-gradient(180deg, rgba(10, 14, 16, .35) 0, rgba(10, 14, 16, 0) 22%, rgba(10, 14, 16, 0) 70%, rgba(10, 14, 16, .4) 100%); pointer-events: none; }
 /* the logo, big and centered over the loop */
-.h1-logo { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; padding: var(--hdr) var(--g) 0; margin: 0; }
+.h1-logo { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: clamp(14px, 2vw, 24px); padding: var(--hdr) var(--g) 0; margin: 0; text-align: center; }
+.h1-logo h1 { margin: 0; line-height: 0; }
+.h1-rank { color: #fff; font-size: clamp(11px, 1vw, 13px); font-weight: 500; letter-spacing: .16em; text-transform: uppercase; text-shadow: 0 1px 2px rgba(10, 14, 16, .5), 0 2px 16px rgba(10, 14, 16, .55); padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, .5); animation: rise 1.2s .05s var(--ease) both; }
+@media (hover: hover) { .h1-rank:hover { border-bottom-color: #fff; } }
 .h1-logo img { width: min(72vw, 720px); height: auto; filter: drop-shadow(0 2px 30px rgba(10, 14, 16, .4)); animation: rise 1.2s .15s var(--ease) both; }
 /* the header's small logo stays out of the way until you scroll past the big one */
 .logo { transition: opacity .4s var(--ease); }
@@ -177,8 +180,7 @@ body.menu-open { overflow: hidden; }
 .painting-photo-title { z-index: 2; }
 .painting-photo-title a, .painting-photo-title button { pointer-events: auto; }
 .painting-invite { margin-top: 12px; max-width: 34ch; }
-.painting-invite { display: none; }
-[data-detail-lens] { position: relative; }
+[data-detail-lens] { position: relative; -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; }
 .painting-lens { position: absolute; top: 0; left: 0; box-sizing: border-box; background-origin: border-box; z-index: 1; width: clamp(100px, 12vw, 172px); aspect-ratio: 1; border: 2px solid rgba(255, 255, 255, .9); border-radius: 50%; box-shadow: 0 4px 20px #1118; background-repeat: no-repeat; opacity: 0; transition: opacity .12s ease-out; pointer-events: none; }
 .painting-palette { position: absolute; inset: 0 auto auto 0; z-index: 2; display: flex; gap: 6px; padding: 6px 8px; border: 1px solid #fff5; border-radius: 9px; background: #101923; color: #fff; font-size: 10px; font-variant-numeric: tabular-nums; pointer-events: none; visibility: hidden; }
 .painting-palette span { display: flex; gap: 4px; align-items: center; }
