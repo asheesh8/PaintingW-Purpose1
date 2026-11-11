@@ -96,6 +96,11 @@ PORTAL_LEAD_URL = 'https://bnmntlqjoiqrskjkfzsv.supabase.co/functions/v1/portal-
 PORTAL_ORG = 'painting-with-purpose'
 
 
+# ContractorsRanked badge (Gabe, Nov 10): #1 for painters in Chittenden County, links to their listing
+RANKED = ('<a class="ftr-ranked" href="https://www.contractorsranked.com/painters/essex-junction-vt" target="_blank" rel="noopener">'
+          '<img src="https://www.contractorsranked.com/badges/contractors-ranked-listed.svg" alt="Listed on ContractorsRanked" width="240" height="80" loading="lazy"></a>')
+
+
 def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
     menu = ''.join(f'<li><a href="{h}"{cur(h, current)}>{html.escape(t)}</a></li>' for h, t in MENU)
     doc = f'''<!doctype html>
@@ -135,7 +140,7 @@ def page(fn, title, desc, body, current=None, og='assets/og.jpg', over=False):
 {body}
 </main>
 <footer class="ftr">
-  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont, for Vermonters.</p><p class="mute">Serving {AREA}.</p>{wc("mountains")}</div>
+  <div class="ftr-brand"><a class="ftr-logo" href="index.html"><img src="assets/logo-navy-360.png" alt="Painting With Purpose" width="360" height="232" loading="lazy"></a><p>A painting company born in Vermont, for Vermonters.</p><p class="mute">Serving {AREA}.</p>{wc("mountains")}{RANKED}</div>
   <ul class="ftr-links"><li><a href="tel:{TEL}">802-PAINTER</a></li><li><a href="mailto:{EMAIL}">{EMAIL}</a></li><li class="mute">{ADDRESS}</li>{"".join(f'<li class="mute">{d} · {h}</li>' for d, h in HOURS)}</ul>
   <ul class="ftr-links"><li><a href="work.html">Work</a></li><li><a href="transformations.html">Portfolio</a></li><li><a href="services.html">Services</a></li><li><a href="about.html">About</a></li><li><a href="purpose.html">Purpose</a></li><li><a href="careers.html">Careers</a></li><li><a href="contact.html">Contact</a></li></ul>
   <ul class="ftr-social" aria-label="Follow us">{"".join(f'<li><a href="{u}" target="_blank" rel="noopener">{n}</a></li>' for n, u in SOCIALS)}</ul>

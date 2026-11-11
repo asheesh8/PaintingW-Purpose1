@@ -478,6 +478,8 @@ html:has(.job-dlg[open]) { overflow: hidden; }
 .wc-band { display: grid; justify-items: center; padding: clamp(56px, 7vw, 96px) var(--g) 0; }
 .wc-band .wc { width: min(380px, 80vw); }
 .ftr-brand .wc-mountains { width: 150px; margin-top: 18px; }
+.ftr-ranked { display: block; margin-top: 18px; line-height: 0; }
+.ftr-ranked img { width: 180px; max-width: 100%; height: auto; border: 0; }
 
 /* ---------- tablet ---------- */
 @media (max-width: 1024px) {
