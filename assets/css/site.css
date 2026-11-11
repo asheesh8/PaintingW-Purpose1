@@ -144,6 +144,10 @@ body.menu-open { overflow: hidden; }
 .intro { position: relative; padding: var(--sec) var(--g); display: grid; grid-template-columns: 1fr 1fr; gap: 24px var(--g); align-items: end; }
 .intro h2 { font-size: clamp(44px, 5.4vw, 88px); max-width: 11ch; }
 .intro .lede { max-width: 46ch; }
+.intro-txt { display: grid; gap: 28px; justify-items: start; }
+.ranked { display: inline-flex; align-items: center; gap: 16px; padding-top: 22px; border-top: 1px solid var(--line); color: var(--ink); font-size: 14px; letter-spacing: .02em; }
+.ranked img { width: 150px; height: auto; border: 0; }
+@media (hover: hover) { .ranked:hover span { color: var(--navy); } }
 .intro .wc { position: absolute; right: var(--g); top: clamp(40px, 6vw, 90px); width: clamp(84px, 8vw, 120px); }
 
 /* ---------- home: interior and exterior projects ---------- */
@@ -483,6 +487,8 @@ html:has(.job-dlg[open]) { overflow: hidden; }
 
 /* ---------- tablet ---------- */
 @media (max-width: 1024px) {
+  .intro .wc { top: 28px; width: 76px; }
+  .intro { padding-top: calc(var(--sec) + 48px); }
   .collage ul { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: clamp(120px, 19vw, 200px); }
   .cl-xl { grid-column: span 4; }
   .perks-wrap { grid-template-columns: 1fr 1fr; }
@@ -502,6 +508,7 @@ html:has(.job-dlg[open]) { overflow: hidden; }
 
 /* ---------- phone ---------- */
 @media (max-width: 760px) {
+  .ranked { flex-direction: column; align-items: flex-start; gap: 10px; }
   .collage ul { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 44vw; gap: 3px; }
   .cl-xl, .cl-l { grid-column: span 2; grid-row: span 2; }
   .cl-w { grid-column: span 2; grid-row: span 1; }

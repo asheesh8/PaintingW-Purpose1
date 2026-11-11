@@ -276,7 +276,10 @@ page('index.html', 'Painting With Purpose · A painting company born in Vermont,
 
 <section class="intro">
   <h2>A painting company born in Vermont, for Vermonters.</h2>
-  <p class="lede">Painting With Purpose is a professional painting and staining company serving the entire state of Vermont, eastern New York and western New Hampshire. We are award-winning for our precise work and our commitment to enriching Vermont communities through charitable causes that matter to Vermonters.</p>
+  <div class="intro-txt">
+    <p class="lede">Painting With Purpose is a professional painting and staining company serving the entire state of Vermont, eastern New York and western New Hampshire. We are award-winning for our precise work and our commitment to enriching Vermont communities through charitable causes that matter to Vermonters.</p>
+    <a class="ranked" href="https://www.contractorsranked.com/painters/essex-junction-vt" target="_blank" rel="noopener"><span>Ranked #1 for painters in Chittenden County</span><img src="https://www.contractorsranked.com/badges/contractors-ranked-listed.svg" alt="ContractorsRanked" width="240" height="80" loading="lazy"></a>
+  </div>
   {wc('leaves')}
 </section>
 
